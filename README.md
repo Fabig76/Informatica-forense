@@ -1,18 +1,19 @@
-# Informática Forense
+# Informática Forense · UdeCataluña
 
-> Repositorio oficial del programa de **Informática Forense** — UdeCataluña
->
-> Material de apoyo, guías de laboratorio y recursos complementarios para los estudiantes de la cohorte 2026.
+> Repositorio oficial del programa de **Informática Forense** · Cohorte 2026-II
+
+🌐 **Sitio web del programa:** [fabig76.github.io/Informatica-forense](https://fabig76.github.io/Informatica-forense/)
+
+Material de apoyo, guías de laboratorio y recursos complementarios para los estudiantes de la cohorte 2026.
 
 ---
 
-## 📘 Guía principal para estudiantes
-
-La guía que necesitás para montar tu laboratorio forense en casa (Windows, Mac o Linux). Contiene todo el paso a paso para los talleres de las Unidades 1 y 2.
+## 📘 Recursos principales
 
 | Documento | Descripción |
 |---|---|
-| [📘 GUIA-FORENSE-UdeC.md](./GUIA-FORENSE-UdeC.md) | **Guía principal** — lee esta primero |
+| [🌐 Sitio web del programa](https://fabig76.github.io/Informatica-forense/) | **Empezá aquí** — landing page con el programa completo |
+| [📘 GUIA-FORENSE-UdeC.md](./GUIA-FORENSE-UdeC.md) | Guía principal — lee esta para montar tu laboratorio |
 | [🌐 GUIA-FORENSE-UdeC.html](./GUIA-FORENSE-UdeC.html) | Misma guía, versión con estilo para navegador |
 
 ### ¿Qué vas a encontrar en la guía?
@@ -30,10 +31,11 @@ La guía que necesitás para montar tu laboratorio forense en casa (Windows, Mac
 
 ## 🚀 Cómo empezar
 
-1. **Lee la guía:** [GUIA-FORENSE-UdeC.md](./GUIA-FORENSE-UdeC.md) (o la versión HTML si preferís con formato).
-2. **Elegí tu opción** según tu sistema operativo (Windows / Mac / Linux).
-3. **Seguí los pasos** en orden. Si algo falla, consultá la sección "Solución de problemas" al final.
-4. **Verificá** con los comandos de verificación al final de cada opción.
+1. **Visita la landing** → [fabig76.github.io/Informatica-forense](https://fabig76.github.io/Informatica-forense/) para una vista general del programa.
+2. **Lee la guía:** [GUIA-FORENSE-UdeC.md](./GUIA-FORENSE-UdeC.md) (o la [versión HTML](./GUIA-FORENSE-UdeC.html) si preferís con formato).
+3. **Elegí tu opción** según tu sistema operativo (Windows / Mac / Linux).
+4. **Seguí los pasos** en orden. Si algo falla, consultá la sección "Solución de problemas" al final.
+5. **Verificá** con los comandos de verificación al final de cada opción.
 
 ---
 
@@ -51,6 +53,18 @@ La guía que necesitás para montar tu laboratorio forense en casa (Windows, Mac
 
 ---
 
+## 📂 Estructura del repositorio
+
+```
+.
+├── index.html              ← Landing page del programa (GitHub Pages)
+├── README.md               ← Este archivo
+├── GUIA-FORENSE-UdeC.md    ← Guía principal (Markdown)
+└── GUIA-FORENSE-UdeC.html  ← Misma guía, con estilo para navegador
+```
+
+---
+
 ## ❓ Soporte
 
 - **Foro del LMS** — para preguntas durante la cohorte.
@@ -58,8 +72,4 @@ La guía que necesitás para montar tu laboratorio forense en casa (Windows, Mac
 
 ---
 
-## 📄 Licencia y atribución
-
-Material académico desarrollado por **Fabio** para UdeCataluña · Ingeniería Informática.
-
-Versión: `v.2026.1` — generada el 2026-10-02.
+© 2026 UdeCataluña · Cohorte 2026-II

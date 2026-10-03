@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Programa de Informática Forense · UdeCataluña · Cohorte 2026. Material oficial, guías de laboratorio y el Forense Dashboard.">
+<meta name="author" content="UdeCataluña">
+<meta property="og:title" content="Informática Forense · UdeCataluña">
+<meta property="og:description" content="Programa académico de Informática Forense — cohorte 2026. Guías, herramientas y Forense Dashboard para clase.">
+<meta property="og:type" content="website">
+<meta name="theme-color" content="#0B1F3A">
+<title>Informática Forense · UdeCataluña · Cohorte 2026</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='18' fill='%230B1F3A'/%3E%3Ctext x='50' y='68' font-size='62' text-anchor='middle' fill='%23E96A1B' font-family='sans-serif' font-weight='800'%3EF%3C/text%3E%3C/svg%3E">
+<style>
+  :root {
+    --navy: #0B1F3A;
+    --navy-2: #071528;
+    --accent: #E96A1B;
+    --accent-2: #2E86AB;
+    --bg: #0F1626;
+    --bg-2: #1A1F2E;
+    --bg-3: #232938;
+    --light: #F4F6F9;
+    --grey: #9AA0AC;
+    --green: #2E8B57;
+    --yellow: #F1C40F;
+    --red: #C0392B;
+    --purple: #9B59B6;
+    --radius: 12px;
+    --shadow: 0 8px 28px rgba(0,0,0,.4);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    background: var(--bg);
+    color: var(--light);
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  /* ───── NAVBAR ───── */
+  nav {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(11, 31, 58, 0.92);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-bottom: 3px solid var(--accent);
+    padding: 14px 28px;
+    display: flex; align-items: center; gap: 18px;
+  }
+  nav .brand {
+    display: flex; align-items: center; gap: 12px;
+    font-weight: 800; font-size: 1.05rem;
+    color: var(--accent);
+    text-transform: uppercase; letter-spacing: 0.6px;
+    text-decoration: none;
+  }
+  nav .brand .logo {
+    width: 34px; height: 34px;
+    background: var(--navy);
+    border: 2px solid var(--accent);
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 900; color: var(--accent);
+  }
+  nav .brand small {
+    color: var(--light); font-weight: 400;
+    margin-left: 6px; text-transform: none; letter-spacing: 0;
+  }
+  nav .menu { margin-left: auto; display: flex; gap: 6px; flex-wrap: wrap; }
+  nav .menu a {
+    color: var(--light); text-decoration: none;
+    padding: 8px 14px; border-radius: 8px;
+    font-size: 0.9rem; font-weight: 500;
+    transition: background 0.2s;
+  }
+  nav .menu a:hover { background: var(--bg-3); }
+
+  /* ───── HERO ───── */
+  .hero {
+    position: relative;
+    padding: 90px 24px 110px;
+    text-align: center;
+    background: linear-gradient(135deg, var(--navy) 0%, var(--bg) 100%);
+    border-bottom: 1px solid var(--bg-3);
+    overflow: hidden;
+  }
+  .hero::before {
+    content: ''; position: absolute; inset: 0;
+    background:
+      radial-gradient(800px 400px at 15% 20%, rgba(233,106,27,0.18), transparent 60%),
+      radial-gradient(700px 400px at 85% 80%, rgba(46,134,171,0.15), transparent 60%);
+    pointer-events: none;
+  }
+  .hero > * { position: relative; z-index: 1; }
+  .badge {
+    display: inline-block;
+    background: rgba(233,106,27,0.12);
+    color: var(--accent);
+    padding: 6px 16px; border-radius: 999px;
+    font-size: 0.78rem; font-weight: 700;
+    letter-spacing: 1px; text-transform: uppercase;
+    border: 1px solid rgba(233,106,27,0.3);
+    margin-bottom: 20px;
+  }
+  .hero h1 {
+    font-size: clamp(2.4rem, 6vw, 4rem);
+    font-weight: 900; line-height: 1.1;
+    margin-bottom: 18px;
+  }
+  .hero h1 .accent { color: var(--accent); }
+  .hero .lead {
+    font-size: clamp(1.05rem, 2.2vw, 1.25rem);
+    color: #C9CDD8;
+    max-width: 720px; margin: 0 auto 28px;
+  }
+  .cta {
+    display: flex; gap: 14px; justify-content: center;
+    flex-wrap: wrap; margin-top: 12px;
+  }
+  .btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 14px 26px; border-radius: 10px;
+    font-size: 0.98rem; font-weight: 700;
+    text-decoration: none;
+    border: 2px solid transparent;
+    transition: transform 0.15s, background 0.2s, box-shadow 0.2s;
+    cursor: pointer;
+  }
+  .btn-primary {
+    background: var(--accent); color: white;
+    box-shadow: 0 6px 18px rgba(233,106,27,0.35);
+  }
+  .btn-primary:hover { transform: translateY(-2px); background: #d85e15; }
+  .btn-secondary {
+    background: transparent; color: var(--light);
+    border-color: var(--bg-3);
+  }
+  .btn-secondary:hover { background: var(--bg-2); border-color: var(--accent-2); }
+  .btn-tertiary {
+    background: var(--navy); color: var(--accent);
+    border-color: var(--accent);
+  }
+  .btn-tertiary:hover { background: var(--navy-2); }
+
+  /* ───── SECTIONS ───── */
+  section {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 70px 24px;
+  }
+  section h2 {
+    font-size: clamp(1.8rem, 3.5vw, 2.4rem);
+    font-weight: 800;
+    margin-bottom: 8px;
+    border-left: 5px solid var(--accent);
+    padding-left: 14px;
+  }
+  section .sub {
+    color: var(--grey);
+    margin-bottom: 40px;
+    font-size: 1.05rem;
+  }
+
+  /* ───── UNITS GRID ───── */
+  .units {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 18px;
+  }
+  .unit {
+    background: var(--bg-2);
+    border-radius: var(--radius);
+    padding: 24px;
+    border: 1px solid var(--bg-3);
+    border-top: 4px solid var(--accent);
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .unit:hover { transform: translateY(-4px); box-shadow: var(--shadow); }
+  .unit .num {
+    display: inline-block;
+    background: rgba(233,106,27,0.15);
+    color: var(--accent);
+    font-weight: 800;
+    padding: 4px 12px; border-radius: 999px;
+    font-size: 0.78rem; letter-spacing: 1px;
+    margin-bottom: 12px;
+  }
+  .unit h3 {
+    font-size: 1.15rem; font-weight: 700;
+    color: var(--light); margin-bottom: 8px;
+  }
+  .unit p { color: #C9CDD8; font-size: 0.93rem; }
+  .unit .tools {
+    margin-top: 14px;
+    display: flex; flex-wrap: wrap; gap: 6px;
+  }
+  .unit .tools span {
+    background: var(--bg-3);
+    color: var(--accent-2);
+    font-size: 0.72rem; font-weight: 600;
+    padding: 3px 9px; border-radius: 6px;
+    font-family: "JetBrains Mono", monospace;
+  }
+
+  /* ───── RESOURCE CARDS ───── */
+  .resources {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 22px;
+  }
+  .resource {
+    background: var(--bg-2);
+    border-radius: var(--radius);
+    padding: 28px;
+    border: 1px solid var(--bg-3);
+    border-left: 5px solid var(--accent-2);
+    display: flex; flex-direction: column;
+  }
+  .resource .icon {
+    width: 48px; height: 48px;
+    background: rgba(46,134,171,0.15);
+    color: var(--accent-2);
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.6rem; font-weight: 800;
+    margin-bottom: 16px;
+  }
+  .resource h3 {
+    font-size: 1.2rem; margin-bottom: 8px; color: var(--light);
+  }
+  .resource p { color: #C9CDD8; font-size: 0.94rem; margin-bottom: 18px; flex-grow: 1; }
+  .resource a {
+    color: var(--accent); font-weight: 700;
+    text-decoration: none; font-size: 0.9rem;
+  }
+  .resource a:hover { text-decoration: underline; }
+
+  /* ───── TOOLS TABLE ───── */
+  .tools-table {
+    background: var(--bg-2);
+    border-radius: var(--radius);
+    overflow: hidden;
+    border: 1px solid var(--bg-3);
+  }
+  table {
+    width: 100%; border-collapse: collapse;
+    font-size: 0.95rem;
+  }
+  th, td { padding: 14px 18px; text-align: left; border-bottom: 1px solid var(--bg-3); }
+  th {
+    background: var(--bg-3);
+    color: var(--accent);
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 0.78rem; letter-spacing: 0.5px;
+  }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: rgba(233,106,27,0.05); }
+  td code {
+    background: var(--bg-3);
+    color: var(--accent);
+    padding: 3px 8px; border-radius: 4px;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.85rem;
+  }
+
+  /* ───── INSTRUCTOR ───── */
+  .instructor {
+    background: var(--bg-2);
+    border-radius: var(--radius);
+    padding: 32px;
+    border: 1px solid var(--bg-3);
+    display: flex; gap: 24px; align-items: center;
+    flex-wrap: wrap;
+  }
+  .instructor .avatar {
+    width: 100px; height: 100px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent), var(--accent-2));
+    display: flex; align-items: center; justify-content: center;
+    font-size: 2.2rem; font-weight: 800; color: white;
+    flex-shrink: 0;
+  }
+  .instructor .info h3 { font-size: 1.3rem; margin-bottom: 4px; }
+  .instructor .info .role { color: var(--accent); font-weight: 600; margin-bottom: 8px; font-size: 0.95rem; }
+  .instructor .info p { color: #C9CDD8; font-size: 0.93rem; max-width: 600px; }
+
+  /* ───── FOOTER ───── */
+  footer {
+    background: var(--navy);
+    border-top: 3px solid var(--accent);
+    padding: 40px 24px 28px;
+    text-align: center;
+    color: var(--grey);
+    margin-top: 40px;
+  }
+  footer .row {
+    max-width: 1200px; margin: 0 auto;
+    display: flex; justify-content: space-between; align-items: center;
+    flex-wrap: wrap; gap: 16px;
+  }
+  footer .copy { font-size: 0.88rem; }
+  footer a { color: var(--accent); text-decoration: none; font-weight: 600; }
+  footer a:hover { text-decoration: underline; }
+
+  /* ───── MOBILE ───── */
+  @media (max-width: 720px) {
+    nav { padding: 12px 16px; gap: 8px; }
+    nav .menu { width: 100%; justify-content: center; margin-top: 6px; }
+    .hero { padding: 70px 16px 80px; }
+    section { padding: 50px 16px; }
+    .instructor { flex-direction: column; text-align: center; }
+  }
+
+  /* ───── ANIMATIONS ───── */
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .hero > * { animation: fadeInUp 0.7s ease-out backwards; }
+  .hero .badge { animation-delay: 0.1s; }
+  .hero h1 { animation-delay: 0.2s; }
+  .hero .lead { animation-delay: 0.35s; }
+  .hero .cta { animation-delay: 0.5s; }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="#" class="brand">
+    <span class="logo">F</span>
+    <span>Forense <small>UdeC</small></span>
+  </a>
+  <div class="menu">
+    <a href="#unidades">Unidades</a>
+    <a href="#recursos">Recursos</a>
+    <a href="#herramientas">Herramientas</a>
+    <a href="#instructor">Instructor</a>
+    <a href="https://github.com/Fabig76/Informatica-forense" target="_blank" rel="noopener">GitHub ↗</a>
+  </div>
+</nav>
+
+<section class="hero">
+  <span class="badge">Cohorte 2026 · Material oficial</span>
+  <h1>Informática <span class="accent">Forense</span></h1>
+  <p class="lead">
+    Programa académico de UdeCataluña. Aprende a adquirir, preservar y analizar
+    evidencia digital con herramientas profesionales — desde la línea de comandos
+    hasta el Forense Dashboard interactivo.
+  </p>
+  <div class="cta">
+    <a href="#guia" class="btn btn-primary">📘 Empezar por la guía</a>
+    <a href="#recursos" class="btn btn-secondary">🧪 Ver el dashboard</a>
+    <a href="GUIA-FORENSE-UdeC.html" class="btn btn-tertiary" target="_blank" rel="noopener">Leer la guía completa ↗</a>
+  </div>
+</section>
+
+<section id="unidades">
+  <h2>Las 5 unidades del programa</h2>
+  <p class="sub">Cada unidad combina teoría, práctica con herramientas reales y entregables evaluables.</p>
+  <div class="units">
+    <div class="unit">
+      <span class="num">U1</span>
+      <h3>Identificación y preservación</h3>
+      <p>Hashes criptográficos (MD5/SHA-256), efecto avalancha, metadatos EXIF/GPS y verificación de cadena de custodia.</p>
+      <div class="tools">
+        <span>exiftool</span><span>md5sum</span><span>sha256sum</span><span>xxd</span>
+      </div>
+    </div>
+    <div class="unit">
+      <span class="num">U2</span>
+      <h3>Adquisición</h3>
+      <p>Adquisición bit-a-bit con dc3dd, captura de RAM con AVML y documentación FPJ-8 (cadena de custodia).</p>
+      <div class="tools">
+        <span>dc3dd</span><span>avml</span><span>dd</span><span>lsblk</span>
+      </div>
+    </div>
+    <div class="unit">
+      <span class="num">U3</span>
+      <h3>Análisis de disco</h3>
+      <p>Sleuth Kit para inodos y journaling, file carving con photorec, análisis de registro Windows (RegRipper).</p>
+      <div class="tools">
+        <span>sleuthkit</span><span>fls</span><span>istat</span><span>photorec</span>
+      </div>
+    </div>
+    <div class="unit">
+      <span class="num">U4</span>
+      <h3>Memoria y redes</h3>
+      <p>Análisis de RAM con Volatility, captura y filtrado de paquetes con TShark, lectura de .pcap.</p>
+      <div class="tools">
+        <span>volatility</span><span>tshark</span><span>wireshark</span>
+      </div>
+    </div>
+    <div class="unit">
+      <span class="num">U5</span>
+      <h3>Documentación y dictamen</h3>
+      <p>Elaboración de dictámenes periciales, cadena de custodia formal y exportación de evidencia procesable.</p>
+      <div class="tools">
+        <span>FPJ-8</span><span>dictamen</span><span>reportes</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="recursos">
+  <h2>Recursos del programa</h2>
+  <p class="sub">Todo lo que necesitás para cursar la materia, sin importar tu sistema operativo.</p>
+  <div class="resources">
+    <div class="resource" id="guia">
+      <div class="icon">📘</div>
+      <h3>Guía del Laboratorio en Casa</h3>
+      <p>Paso a paso para montar tu propio laboratorio forense en Windows (WSL2), Mac o Linux. Incluye instalación de todas las herramientas, datasets de práctica y solución de errores comunes.</p>
+      <a href="GUIA-FORENSE-UdeC.html" target="_blank" rel="noopener">Leer la guía completa →</a>
+    </div>
+    <div class="resource">
+      <div class="icon">🧪</div>
+      <h3>Forense Dashboard</h3>
+      <p>Interfaz web Flask para el docente: hashes, EXIF, adquisición, captura de RAM, generación de FPJ-8 y dictamen pericial en un solo lugar. Desplegado en Docker sobre VPS.</p>
+      <a href="https://github.com/Fabig76/Informatica-forense" target="_blank" rel="noopener">Ver en GitHub →</a>
+    </div>
+    <div class="resource">
+      <div class="icon">📂</div>
+      <h3>Datasets de práctica</h3>
+      <p>Imágenes de muestra con metadatos EXIF etiquetados, archivos de evidencia (.dd) y capturas de RAM de ejemplo para las prácticas de clase.</p>
+      <a href="https://drive.google.com/drive/folders/1G_0JNFPoxUwgtqYPuw3eE9-OaeGkP31Y" target="_blank" rel="noopener">Carpeta en Drive →</a>
+    </div>
+  </div>
+</section>
+
+<section id="herramientas">
+  <h2>Herramientas forenses cubiertas</h2>
+  <p class="sub">Software libre y multiplataforma que se usa en investigaciones reales.</p>
+  <div class="tools-table">
+    <table>
+      <thead>
+        <tr><th>Herramienta</th><th>Uso principal</th><th>Unidad</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>exiftool</code></td><td>Lectura/escritura de metadatos EXIF, IPTC y XMP en imágenes y archivos</td><td>U1</td></tr>
+        <tr><td><code>dc3dd</code></td><td>Versión forense de <code>dd</code> del DoD con hashing integrado en la adquisición</td><td>U2</td></tr>
+        <tr><td><code>avml</code></td><td>Captura de memoria RAM en Linux sin necesidad de compilar kernel modules</td><td>U2</td></tr>
+        <tr><td><code>sleuthkit</code></td><td>Análisis forense de sistemas de archivos (inodos, journaling, MFT)</td><td>U3</td></tr>
+        <tr><td><code>photorec</code></td><td>Recuperación de archivos por firma de bytes (file carving)</td><td>U3</td></tr>
+        <tr><td><code>volatility</code></td><td>Análisis forense de dumps de RAM (procesos, conexiones, malware)</td><td>U4</td></tr>
+        <tr><td><code>tshark</code></td><td>Captura y análisis de paquetes de red (CLI de Wireshark)</td><td>U4</td></tr>
+        <tr><td><code>ewf-tools</code></td><td>Manejo de imágenes forenses en formato EnCase (.E01)</td><td>U2</td></tr>
+        <tr><td><code>foremost</code></td><td>File carving alternativo a photorec, basado en configuración</td><td>U3</td></tr>
+        <tr><td><code>testdisk</code></td><td>Recuperación de particiones perdidas y sistemas de archivos dañados</td><td>U3</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section id="instructor">
+  <h2>Instructor</h2>
+  <p class="sub">Docente responsable del programa.</p>
+  <div class="instructor">
+    <div class="avatar">F</div>
+    <div class="info">
+      <h3>Fabio</h3>
+      <div class="role">Docente · Informática Forense · UdeCataluña</div>
+      <p>
+        Coordina la cohorte 2026-II de Informática Forense. Combina ejercicios prácticos
+        sobre herramientas CLI con demostraciones en vivo del Forense Dashboard.
+        Enfoque en aprendizaje activo, evidencia reproducible y método científico aplicado.
+      </p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="row">
+    <div class="copy">
+      © 2026 UdeCataluña · Informática Forense · Cohorte 2026-II
+    </div>
+    <div>
+      <a href="https://github.com/Fabig76/Informatica-forense" target="_blank" rel="noopener">Repositorio en GitHub</a>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
