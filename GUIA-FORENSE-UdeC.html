@@ -1,0 +1,1497 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Guía del Laboratorio en Casa · Informática Forense · U1 y U2</title>
+<style>
+  :root {
+    --navy: #0B1F3A;
+    --accent: #E96A1B;
+    --accent2: #2E86AB;
+    --bg: #0F1626;
+    --bg2: #1A1F2E;
+    --bg3: #232938;
+    --light: #F4F6F9;
+    --grey: #9AA0AC;
+    --green: #2E8B57;
+    --yellow: #F1C40F;
+    --red: #C0392B;
+    --purple: #9B59B6;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    background: var(--bg);
+    color: var(--light);
+    line-height: 1.7;
+    padding-bottom: 80px;
+  }
+
+  /* ───── Navbar ───── */
+  nav {
+    position: sticky; top: 0; z-index: 100;
+    background: var(--navy);
+    border-bottom: 3px solid var(--accent);
+    padding: 12px 24px;
+    display: flex; align-items: center; gap: 16px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+  }
+  nav .brand {
+    font-weight: 700; font-size: 1.05rem;
+    color: var(--accent); text-transform: uppercase; letter-spacing: 0.5px;
+  }
+  nav .brand small { color: var(--light); font-weight: 400; margin-left: 8px; }
+  nav .status {
+    margin-left: auto;
+    background: var(--green); color: white;
+    padding: 4px 12px; border-radius: 999px;
+    font-size: 0.8rem; font-weight: 600;
+  }
+
+  /* ───── Layout ───── */
+  .layout { display: grid; grid-template-columns: 260px 1fr; max-width: 1400px; margin: 0 auto; padding: 24px; gap: 24px; }
+  aside {
+    position: sticky; top: 80px; height: fit-content;
+    background: var(--bg2); border-radius: 12px;
+    padding: 16px; border: 1px solid var(--bg3);
+    max-height: calc(100vh - 100px); overflow-y: auto;
+  }
+  aside h4 { font-size: 0.75rem; text-transform: uppercase; color: var(--grey); letter-spacing: 1px; margin-bottom: 12px; }
+  aside .group { font-size: 0.7rem; color: var(--accent); font-weight: 700; margin: 12px 0 4px; text-transform: uppercase; }
+  aside a {
+    display: block; color: var(--light); text-decoration: none;
+    padding: 6px 10px; border-radius: 6px;
+    font-size: 0.83rem; margin-bottom: 2px;
+    border-left: 3px solid transparent;
+    transition: all 0.2s;
+  }
+  aside a:hover { background: var(--bg3); border-left-color: var(--accent); }
+
+  main { max-width: 920px; }
+  section { margin-bottom: 48px; scroll-margin-top: 80px; }
+
+  /* ───── Tipografía ───── */
+  h1 {
+    font-size: 2.4rem; font-weight: 800;
+    color: var(--light); margin-bottom: 8px;
+    border-bottom: 4px solid var(--accent);
+    padding-bottom: 12px;
+  }
+  h1 small { display: block; font-size: 0.85rem; font-weight: 400; color: var(--accent); margin-top: 6px; text-transform: uppercase; letter-spacing: 1px; }
+  h2 {
+    font-size: 1.6rem; font-weight: 700;
+    color: var(--accent); margin: 32px 0 12px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--bg3);
+  }
+  h3 { font-size: 1.15rem; font-weight: 700; color: var(--accent2); margin: 16px 0 8px; }
+  h4 { font-size: 1rem; font-weight: 700; color: var(--light); margin: 12px 0 6px; }
+  p { margin-bottom: 12px; color: #D5D8E0; }
+  ul, ol { margin-left: 24px; margin-bottom: 12px; color: #D5D8E0; }
+  li { margin-bottom: 6px; }
+  strong { color: var(--light); }
+  em { color: var(--yellow); font-style: normal; }
+
+  /* ───── Cards ───── */
+  .card {
+    background: var(--bg2);
+    border-radius: 12px;
+    padding: 20px;
+    margin: 16px 0;
+    border: 1px solid var(--bg3);
+    border-left: 4px solid var(--accent);
+  }
+  .card.green { border-left-color: var(--green); }
+  .card.blue { border-left-color: var(--accent2); }
+  .card.yellow { border-left-color: var(--yellow); }
+  .card.red { border-left-color: var(--red); }
+  .card.purple { border-left-color: var(--purple); }
+
+  /* ───── Tablas ───── */
+  table {
+    width: 100%; border-collapse: collapse;
+    margin: 12px 0; font-size: 0.9rem;
+  }
+  th, td { padding: 10px 12px; text-align: left; border-bottom: 1px solid var(--bg3); vertical-align: top; }
+  th { background: var(--bg3); color: var(--accent); font-weight: 700; text-transform: uppercase; font-size: 0.76rem; letter-spacing: 0.5px; }
+  tr:hover td { background: rgba(233, 106, 27, 0.05); }
+  td code { background: var(--bg3); padding: 2px 6px; border-radius: 4px; color: var(--accent); font-size: 0.85rem; }
+
+  /* ───── Code ───── */
+  pre {
+    background: #0A0E1A;
+    color: #00FF88;
+    padding: 16px;
+    border-radius: 10px;
+    overflow-x: auto;
+    font-family: 'JetBrains Mono', 'Fira Code', Consolas, Monaco, monospace;
+    font-size: 0.85rem;
+    line-height: 1.55;
+    border: 1px solid var(--bg3);
+    margin: 12px 0;
+  }
+  pre code { color: inherit; background: transparent; padding: 0; font-size: inherit; }
+  code {
+    background: var(--bg3);
+    color: var(--accent);
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-family: 'JetBrains Mono', Consolas, monospace;
+    font-size: 0.88rem;
+  }
+  pre .c { color: var(--grey); }
+  pre .cmd { color: var(--accent); font-weight: 700; }
+  pre .ok { color: var(--green); }
+  pre .warn { color: var(--yellow); }
+  pre .err { color: var(--red); }
+  pre .var { color: var(--purple); }
+
+  /* ───── Notes ───── */
+  .note, .warning, .danger, .success, .info {
+    padding: 14px 18px; border-radius: 10px;
+    margin: 16px 0; font-size: 0.92rem;
+    border-left: 4px solid;
+  }
+  .note { background: rgba(46, 134, 171, 0.1); border-left-color: var(--accent2); }
+  .info { background: rgba(155, 89, 182, 0.1); border-left-color: var(--purple); }
+  .warning { background: rgba(241, 196, 15, 0.1); border-left-color: var(--yellow); }
+  .danger { background: rgba(192, 57, 43, 0.1); border-left-color: var(--red); }
+  .success { background: rgba(46, 139, 87, 0.1); border-left-color: var(--green); }
+  .note::before { content: "💡 "; }
+  .info::before { content: "ℹ️ "; }
+  .warning::before { content: "⚠️ "; }
+  .danger::before { content: "🚨 "; }
+  .success::before { content: "✅ "; }
+
+  /* ───── Pills ───── */
+  .pill {
+    display: inline-block;
+    background: var(--accent);
+    color: white;
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    margin-right: 4px;
+    margin-bottom: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .pill.blue { background: var(--accent2); }
+  .pill.green { background: var(--green); }
+  .pill.yellow { background: var(--yellow); color: #000; }
+  .pill.red { background: var(--red); }
+  .pill.purple { background: var(--purple); }
+  .pill.outline { background: transparent; border: 1px solid var(--accent); color: var(--accent); }
+
+  /* ───── Steps ───── */
+  .steps { counter-reset: step; list-style: none; padding: 0; }
+  .steps li {
+    counter-increment: step;
+    padding: 14px 18px 14px 60px;
+    background: var(--bg2);
+    border-radius: 10px;
+    margin-bottom: 8px;
+    position: relative;
+    border-left: 3px solid var(--accent);
+  }
+  .steps li::before {
+    content: counter(step);
+    position: absolute;
+    left: 16px; top: 14px;
+    width: 32px; height: 32px;
+    background: var(--accent);
+    color: white;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 0.9rem;
+  }
+  .steps li b { color: var(--accent2); }
+  .steps li code { background: var(--bg3); padding: 2px 6px; border-radius: 4px; color: var(--accent); font-size: 0.85rem; }
+
+  /* ───── Hero ───── */
+  .hero {
+    background: linear-gradient(135deg, var(--navy) 0%, #1A2A4A 100%);
+    border-radius: 16px;
+    padding: 32px;
+    margin-bottom: 32px;
+    border-left: 6px solid var(--accent);
+  }
+  .hero h1 { border: none; padding: 0; margin-bottom: 16px; }
+  .hero .meta { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 16px; }
+  .hero .meta div { background: rgba(233, 106, 27, 0.1); padding: 8px 14px; border-radius: 6px; font-size: 0.85rem; }
+  .hero .meta strong { color: var(--accent); }
+
+  /* ───── Options grid ───── */
+  .options { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin: 16px 0; }
+  .opt {
+    background: var(--bg2); border: 1px solid var(--bg3);
+    border-radius: 12px; padding: 18px;
+    border-top: 4px solid var(--accent2);
+  }
+  .opt h3 { color: var(--accent2); margin-top: 0; }
+  .opt.recommended { border-top-color: var(--green); }
+  .opt.recommended h3 { color: var(--green); }
+  .opt.advanced { border-top-color: var(--purple); }
+  .opt.advanced h3 { color: var(--purple); }
+
+  /* ───── Footer ───── */
+  footer {
+    background: var(--navy);
+    padding: 20px; text-align: center;
+    border-top: 3px solid var(--accent);
+    color: var(--grey); font-size: 0.85rem;
+  }
+
+  /* ───── Print ───── */
+  @media print {
+    nav, aside, footer { display: none; }
+    .layout { display: block; padding: 0; }
+    main { max-width: 100%; }
+    body { background: white; color: black; }
+    pre { background: #f5f5f5; color: black; }
+  }
+  @media (max-width: 900px) {
+    .layout { grid-template-columns: 1fr; }
+    aside { position: static; max-height: none; }
+    .options { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="brand">UdeCataluña · Informática Forense <small>Guía Laboratorio en Casa</small></div>
+  <span class="status">U1 + U2 · v.2026.1</span>
+</nav>
+
+<div class="layout">
+
+<aside>
+  <h4>Tabla de contenidos</h4>
+  <div class="group">Antes de empezar</div>
+  <a href="#bienvenida">👋 Bienvenida</a>
+  <a href="#requisitos">📋 Requisitos mínimos</a>
+  <a href="#opciones">🛠️ Elige tu opción (WSL/VBox/Mac)</a>
+
+  <div class="group">Opción A · WSL2 (Windows)</div>
+  <a href="#wsl-instalar">1. Activar WSL2</a>
+  <a href="#wsl-ubuntu">2. Instalar Ubuntu</a>
+  <a href="#wsl-paquetes">3. Instalar paquetes</a>
+  <a href="#wsl-verificar">4. Verificar</a>
+
+  <div class="group">Opción B · VirtualBox</div>
+  <a href="#vbox-instalar">1. Instalar VirtualBox</a>
+  <a href="#vbox-ubuntu">2. Crear VM Ubuntu</a>
+  <a href="#vbox-paquetes">3. Instalar paquetes</a>
+
+  <div class="group">Opción C · Mac</div>
+  <a href="#mac-instalar">1. Instalar brew + utils</a>
+
+  <div class="group">Taller U1</div>
+  <a href="#u1-archivos">📁 Preparar archivos</a>
+  <a href="#u1-hashes">🔐 Calcular hashes</a>
+  <a href="#u1-verificar">✓ Verificar integridad</a>
+  <a href="#u1-exif">🖼️ Leer metadatos EXIF</a>
+  <a href="#u1-cyberchef">🧪 CyberChef</a>
+  <a href="#u1-efecto">💥 Efecto avalancha</a>
+
+  <div class="group">Taller U2</div>
+  <a href="#u2-discos">💾 Listar dispositivos</a>
+  <a href="#u2-imagen">🛡️ Crear imagen (dc3dd)</a>
+  <a href="#u2-ram">🧠 Captura de RAM (AVML)</a>
+  <a href="#u2-dashboard">🖥️ Forense Dashboard</a>
+  <a href="#u2-fpj8">📝 Generar FPJ-8</a>
+
+  <div class="group">Cierre</div>
+  <a href="#verificacion-final">✅ Verificación final</a>
+  <a href="#problemas">🚨 Solución de problemas</a>
+  <a href="#entrega">📤 Qué entregar</a>
+</aside>
+
+<main>
+
+<!-- ============================================ -->
+<section id="bienvenida">
+<div class="hero">
+  <h1>Guía del Laboratorio en Casa
+    <small>Talleres U1 + U2 · Informática Forense</small>
+  </h1>
+  <p>Esta guía te lleva, paso a paso, por todo lo que necesitás hacer en tu computador para montar el laboratorio de las clases 1 y 2. Está escrita para alguien que <strong>nunca usó Linux</strong>: si te sabés defender en una terminal, podés saltar partes; si no, seguí el orden exacto.</p>
+  <p><strong>Tiempo total estimado:</strong> 2-3 horas la primera vez (incluye descargas), 30 min en sesiones siguientes.</p>
+  <div class="meta">
+    <div>📦 <strong>2 talleres</strong> (U1 + U2)</div>
+    <div>⏱️ <strong>~3 horas</strong> setup</div>
+    <div>💾 <strong>~15 GB</strong> disco</div>
+    <div>🧠 <strong>4 GB RAM</strong> mínimo</div>
+  </div>
+</div>
+
+<div class="success">
+  <strong>Si nunca instalaste Linux en tu vida:</strong> elegí la <strong>Opción A (WSL2)</strong> si tenés Windows 10/11, o la <strong>Opción C (Mac con Homebrew)</strong> si tenés Mac. Las dos te dejan una terminal Linux funcionando en 10 minutos. La Opción B (VirtualBox) es más completa pero tarda más.
+</div>
+</section>
+
+<!-- ============================================ -->
+<section id="requisitos">
+<h2>📋 Requisitos mínimos del computador</h2>
+
+<table>
+  <thead>
+    <tr><th>Recurso</th><th>Mínimo</th><th>Recomendado</th><th>Notas</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>Sistema operativo</td><td>Windows 10 (build 1903+), macOS 11+, Ubuntu 20.04+</td><td>Windows 11 / macOS 13+ / Ubuntu 22.04+</td><td>Windows 7 y 8 no soportan WSL2</td></tr>
+    <tr><td>RAM</td><td>4 GB</td><td>8 GB o más</td><td>WSL2/VBox consumen ~2 GB extra</td></tr>
+    <tr><td>Disco libre</td><td>15 GB</td><td>30 GB</td><td>Incluye Ubuntu + herramientas + archivos de prueba</td></tr>
+    <tr><td>Procesador</td><td>2 núcleos</td><td>4 núcleos con virtualización</td><td>VT-x/AMD-V debe estar habilitado en BIOS</td></tr>
+    <tr><td>Internet</td><td>Banda ancha</td><td>—</td><td>Para descargar ~5 GB (Ubuntu ISO + paquetes)</td></tr>
+    <tr><td>Permisos de administrador</td><td>Sí</td><td>—</td><td>Para instalar software</td></tr>
+  </tbody>
+</table>
+
+<div class="warning">
+  <strong>⚠️ Si tenés una laptop con 4 GB de RAM:</strong> usá solo WSL2 (no VirtualBox). VirtualBox consume mucha RAM y tu laptop puede volverse inutilizable.
+</div>
+
+<h3>Lo que vas a instalar</h3>
+
+<ul>
+  <li><strong>Ubuntu 22.04 LTS</strong> (Linux) — el sistema operativo donde corren las herramientas</li>
+  <li><strong>Python 3 + pip</strong> — para el Forense Dashboard</li>
+  <li><strong>Paquetes forenses</strong> — exiftool, dc3dd, sleuthkit, ewf-tools, avml</li>
+  <li><strong>VirtualBox</strong> (solo si elegís Opción B)</li>
+</ul>
+</section>
+
+<!-- ============================================ -->
+<section id="opciones">
+<h2>🛠️ Elige tu opción</h2>
+
+<p>Dependiendo de tu sistema operativo, hay tres caminos. <strong>Andá al que corresponda a tu caso y seguilo hasta el final</strong>:</p>
+
+<div class="options">
+  <div class="opt recommended">
+    <h3>Opción A · WSL2 <span class="pill green">Recomendada</span></h3>
+    <p><strong>Para:</strong> Windows 10/11 con 4 GB o más de RAM.</p>
+    <p>Es la más rápida de instalar (10 min) y consume menos recursos que VirtualBox. Ubuntu corre como una "ventana" dentro de Windows, sin ventana gráfica de escritorio, solo terminal.</p>
+    <p>Ideal si solo necesitás la terminal y las herramientas CLI.</p>
+    <p><a href="#wsl-instalar">→ Ir a Opción A</a></p>
+  </div>
+
+  <div class="opt">
+    <h3>Opción B · VirtualBox</h3>
+    <p><strong>Para:</strong> cualquier sistema, especialmente si necesitás un escritorio Linux completo (GUI).</p>
+    <p>Tarda más en instalar (30-45 min, sobre todo la descarga del ISO de 4.7 GB) y consume más RAM, pero te da una VM Linux completa con escritorio gráfico.</p>
+    <p>Útil si querés ver Guymager con interfaz visual.</p>
+    <p><a href="#vbox-instalar">→ Ir a Opción B</a></p>
+  </div>
+
+  <div class="opt advanced">
+    <h3>Opción C · Mac con Homebrew</h3>
+    <p><strong>Para:</strong> macOS 11 o superior con chip Intel o Apple Silicon.</p>
+    <p>La más simple si ya tenés Homebrew. Muchas herramientas forenses están disponibles como paquetes brew.</p>
+    <p><a href="#mac-instalar">→ Ir a Opción C</a></p>
+  </div>
+</div>
+
+<div class="info">
+  <strong>Diferencia clave entre las opciones:</strong> WSL2 y Mac usan el kernel nativo de tu máquina, solo instalan las herramientas Linux. VirtualBox crea un computador virtual completo, incluyendo su propio kernel. Para este curso, las tres opciones sirven igual para los talleres.
+</div>
+</section>
+
+<!-- ============================================ -->
+<section id="wsl-instalar">
+<h2>🪟 Opción A · WSL2 (Windows) — Paso 1 de 4</h2>
+
+<h3>1. Activar WSL2</h3>
+
+<p>Windows 10 (build 1903 o superior) y Windows 11 ya tienen WSL integrado. Para activarlo:</p>
+
+<ol class="steps">
+  <li>Abrí <b>PowerShell como administrador</b>: clic derecho en el menú Inicio → "Terminal (Administrador)" o "PowerShell (Administrador)".</li>
+  <li>Ejecutá este comando (copialo y pegalo con clic derecho):
+<pre><code>wsl --install</code></pre>
+  </li>
+  <li>Esperá a que termine. Te preguntará un <b>Username</b> y un <b>Password</b> para tu Ubuntu: usá algo fácil de recordar (no es para producción, es tu laptop).</li>
+  <li>Cuando termine, <b>reiniciá Windows</b>.</li>
+  <li>Tras el reinicio, abrí "Ubuntu" desde el menú Inicio. Te aparecerá una terminal negra con texto verde/azul. Ya tenés Linux funcionando.</li>
+</ol>
+
+<div class="note">
+  <strong>Si el comando <code>wsl --install</code> falla</strong> con un error de "virtualización no habilitada": reiniciá el computador, entrá a la BIOS (normalmente con F2, F10, F12 o Supr al inicio), buscá la opción "Intel VT-x" o "AMD SVM" y activala. Guardá y reiniciá.
+</div>
+
+<h3>2. Actualizar Ubuntu</h3>
+
+<p>Una vez dentro de Ubuntu, ejecutá:</p>
+
+<pre><code><span class="c"># Actualizar la lista de paquetes</span>
+sudo apt update
+
+<span class="c"># Instalar todas las actualizaciones pendientes</span>
+sudo apt upgrade -y</code></pre>
+
+<p>Esto puede tardar 5-10 minutos según la velocidad de tu internet. Si te pregunta "Do you want to continue? [Y/n]" apretá <code>Y</code> y Enter.</p>
+</section>
+
+<!-- ============================================ -->
+<section id="wsl-ubuntu">
+<h2>Opción A · Paso 2 de 4</h2>
+
+<h3>Verificar que Ubuntu funciona</h3>
+
+<p>Una vez completada la actualización, ejecutá:</p>
+
+<pre><code><span class="c"># Verificar versión de Ubuntu</span>
+lsb_release -a
+
+<span class="c"># Verificar kernel Linux</span>
+uname -r
+
+<span class="c"># Ver tu nombre de usuario y directorio actual</span>
+whoami
+pwd</code></pre>
+
+<p>Deberías ver algo así:</p>
+
+<pre><code>Distributor ID: Ubuntu
+Description:    Ubuntu 22.04.x LTS
+Release:        22.04
+Codename:       jammy
+
+<span class="ok">5.15.x.x-microsoft-standard-WSL2</span>
+
+tu_usuario
+/home/tu_usuario</code></pre>
+</section>
+
+<!-- ============================================ -->
+<section id="wsl-paquetes">
+<h2>Opción A · Paso 3 de 4</h2>
+
+<h3>Instalar los paquetes para U1 y U2</h3>
+
+<p>Ahora vamos a instalar todas las herramientas de una vez. Pegá este bloque completo en la terminal y apretá Enter:</p>
+
+<pre><code><span class="c"># U1: hashes, metadatos, análisis</span>
+sudo apt install -y \
+    libimage-exiftool-perl \
+    file \
+    xxd \
+    binutils
+
+<span class="c"># U2: adquisición forense</span>
+sudo apt install -y \
+    dc3dd \
+    sleuthkit \
+    ewf-tools \
+    testdisk \
+    foremost \
+    curl
+
+<span class="c"># AVML (binario estático de Microsoft, no está en apt)</span>
+sudo curl -L -o /usr/local/bin/avml \
+    https://github.com/microsoft/avml/releases/latest/download/avml
+sudo chmod +x /usr/local/bin/avml
+avml --version
+
+<span class="c"># Python 3 + pip + entorno virtual</span>
+sudo apt install -y python3-pip python3-venv
+python3 -m venv --help >/dev/null && <span class="ok">echo "Python venv OK"</span></code></pre>
+
+<p>Esto instala todo. Al terminar (puede tardar 5-15 min según tu conexión), verificá:</p>
+
+<pre><code><span class="c"># Verificar todas las herramientas</span>
+exiftool -ver
+dc3dd --version 2&gt;&amp;1 | head -1
+ewf-tools --version 2&gt;&amp;1 | head -1
+fls --version 2&gt;&amp;1 | head -1
+avml --version
+python3 --version</code></pre>
+
+<p>Todas deben responder con un número de versión. Si alguna falla, volvé a <a href="#problemas">Solución de problemas</a>.</p>
+</section>
+
+<section id="wsl-verificar">
+<h2>Opción A · Paso 4 de 4</h2>
+
+<h3>Crear el directorio de trabajo</h3>
+
+<pre><code><span class="c"># Crear estructura de carpetas para los talleres</span>
+mkdir -p ~/forense-lab/{u1,u2,uploads,bitacoras,imagenes}
+cd ~/forense-lab
+ls -la
+
+<span class="c"># Crear archivo de prueba de la Clase 1</span>
+echo "Acta de entrega de evidencia - Caso UdeC-2026-001" &gt; u1/acta.txt
+cat u1/acta.txt</code></pre>
+
+<p>Deberías ver la estructura de carpetas y el contenido del archivo. Ya estás listo para los talleres.</p>
+
+<div class="success">
+  <strong>¡Listo!</strong> Saltá a <a href="#u1-archivos">Taller U1 · Preparar archivos</a> para empezar.
+</div>
+</section>
+
+<!-- ============================================ -->
+<section id="vbox-instalar">
+<h2>💻 Opción B · VirtualBox — Paso 1 de 3</h2>
+
+<h3>1. Instalar VirtualBox</h3>
+
+<ol class="steps">
+  <li>Descargá VirtualBox desde <a href="https://www.virtualbox.org/wiki/Downloads" target="_blank">virtualbox.org/wiki/Downloads</a> (~100 MB).<br>
+      <b>Windows:</b> "VirtualBox 7.0.x platform packages" → "Windows hosts"<br>
+      <b>Mac:</b> "VirtualBox 7.0.x platform packages" → "macOS / Intel hosts" o "macOS / Apple Silicon hosts"<br>
+      <b>Linux:</b> "VirtualBox 7.0.x platform packages" → tu distribución</li>
+  <li>Ejecutá el instalador. Aceptá los defaults.</li>
+  <li>En Windows, te preguntará sobre "Network Interfaces" varias veces: decí "Yes" cada vez (instala drivers de red virtual).</li>
+</ol>
+
+<h3>2. Descargar Ubuntu 22.04 LTS</h3>
+
+<p>Descargá el ISO desde <a href="https://releases.ubuntu.com/22.04/" target="_blank">releases.ubuntu.com/22.04</a> (~4.7 GB). Elegí <b>"ubuntu-22.04.x-desktop-amd64.iso"</b>.</p>
+
+<p>Puede tardar 10-30 minutos según tu internet. Dejalo descargando mientras hacés otra cosa.</p>
+
+<div class="warning">
+  <strong>⚠️ Verificá que tenés espacio en disco:</strong> Ubuntu necesita al menos 25 GB libres para la VM. Si tu disco está casi lleno, liberá espacio antes de continuar.
+</div>
+</section>
+
+<section id="vbox-ubuntu">
+<h2>Opción B · Paso 2 de 3</h2>
+
+<h3>3. Crear la máquina virtual</h3>
+
+<ol class="steps">
+  <li>Abrí VirtualBox y hacé clic en <b>"Nueva"</b> (icono azul).</li>
+  <li>Configurá:
+    <ul>
+      <li><b>Nombre:</b> ForenseLab</li>
+      <li><b>Tipo:</b> Linux</li>
+      <li><b>Versión:</b> Ubuntu (64-bit)</li>
+      <li><b>Memoria RAM:</b> 4096 MB (si tenés 8 GB en la laptop) o 2048 MB (si tenés 4 GB)</li>
+      <li><b>Disco duro:</b> "Crear un disco duro virtual ahora"</li>
+      <li><b>Tipo de disco:</b> VDI</li>
+      <li><b>Almacenamiento:</b> Reservado dinámicamente</li>
+      <li><b>Tamaño:</b> 25 GB</li>
+    </ul>
+  </li>
+  <li>Hacé clic en <b>"Crear"</b>.</li>
+  <li>En la lista de VMs, seleccioná "ForenseLab" y hacé clic en <b>"Configuración"</b> (engranaje amarillo).</li>
+  <li>En <b>"Almacenamiento"</b> → ícono de CD → clic en el disco azul → "Elegir un archivo de disco óptico virtual" → buscá el ISO de Ubuntu que descargaste.</li>
+  <li>En <b>"Red"</b> → "Adaptador 1" → "Conectado a: Adaptador puente" o "NAT" (cualquiera funciona para este curso).</li>
+  <li>Hacé clic en <b>"Iniciar"</b> (flecha verde).</li>
+  <li>Ubuntu arrancará desde el ISO. Elegí <b>"Install Ubuntu"</b>, idioma Español, y seguí el asistente. Aceptá los defaults y poné una contraseña fácil de recordar.</li>
+  <li>La instalación tarda 10-20 minutos. Al terminar, reiniciá la VM (elige "Restart Now"). Cuando te pida "remove the installation medium", simplemente apretá Enter.</li>
+  <li>Iniciá sesión con tu usuario y contraseña. ¡Ya tenés Ubuntu funcionando!</li>
+</ol>
+
+<div class="note">
+  <strong>Captura de teclado entre VM y host:</strong> para "soltar" el cursor de la VM, apretá la tecla <b>Ctrl derecho</b> (la que está al lado de la flecha derecha). En Mac con VirtualBox, es la tecla <b>Cmd izquierda</b> por defecto.
+</div>
+</section>
+
+<section id="vbox-paquetes">
+<h2>Opción B · Paso 3 de 3</h2>
+
+<h3>4. Instalar los paquetes en Ubuntu</h3>
+
+<p>Abrí una terminal en Ubuntu (Ctrl+Alt+T) y ejecutá el bloque completo:</p>
+
+<pre><code><span class="c"># Actualizar primero</span>
+sudo apt update
+sudo apt upgrade -y
+
+<span class="c"># U1: hashes, metadatos, análisis</span>
+sudo apt install -y \
+    libimage-exiftool-perl \
+    file \
+    xxd \
+    binutils \
+    curl
+
+<span class="c"># U2: adquisición forense</span>
+sudo apt install -y \
+    dc3dd \
+    sleuthkit \
+    ewf-tools \
+    testdisk \
+    foremost
+
+<span class="c"># AVML (binario estático de Microsoft)</span>
+sudo curl -L -o /usr/local/bin/avml \
+    https://github.com/microsoft/avml/releases/latest/download/avml
+sudo chmod +x /usr/local/bin/avml
+
+<span class="c"># Python 3 + pip + venv</span>
+sudo apt install -y python3-pip python3-venv</code></pre>
+
+<h3>5. Crear la estructura de trabajo</h3>
+
+<pre><code>mkdir -p ~/forense-lab/{u1,u2,uploads,bitacoras,imagenes}
+cd ~/forense-lab
+echo "Acta de entrega de evidencia - Caso UdeC-2026-001" &gt; u1/acta.txt
+ls -la</code></pre>
+
+<p>Saltá a <a href="#u1-archivos">Taller U1 · Preparar archivos</a>.</p>
+</section>
+
+<!-- ============================================ -->
+<section id="mac-instalar">
+<h2>🍎 Opción C · Mac — Paso único</h2>
+
+<h3>Si tenés Homebrew instalado</h3>
+
+<p>Si ya tenés Homebrew, abrí Terminal y ejecutá:</p>
+
+<pre><code><span class="c"># Instalar herramientas forenses</span>
+brew install exiftool dc3dd sleuthkit libewf \
+    testdisk foremost xxd
+
+<span class="c"># AVML</span>
+sudo curl -L -o /usr/local/bin/avml \
+    https://github.com/microsoft/avml/releases/latest/download/avml
+sudo chmod +x /usr/local/bin/avml
+
+<span class="c"># Python (macOS ya lo trae, pero actualizamos)</span>
+brew install python@3.11
+
+<span class="c"># Directorio de trabajo</span>
+mkdir -p ~/forense-lab/{u1,u2,uploads,bitacoras,imagenes}
+echo "Acta de entrega de evidencia - Caso UdeC-2026-001" &gt; ~/forense-lab/u1/acta.txt
+cd ~/forense-lab
+ls -la</code></pre>
+
+<h3>Si NO tenés Homebrew</h3>
+
+<p>Homebrew es un "instalador de paquetes para Mac", parecido a apt de Ubuntu. Para instalarlo:</p>
+
+<ol class="steps">
+  <li>Abrí la aplicación <b>Terminal</b> (buscala en Spotlight con Cmd+Espacio, escribí "Terminal").</li>
+  <li>Pegá este comando y apretá Enter:
+<pre><code>/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"</code></pre>
+  </li>
+  <li>Te pedirá tu contraseña de Mac (la de tu usuario, no la del Apple ID). A medida que instala, vas a ver líneas de código en la terminal. Esperá 5-10 minutos.</li>
+  <li>Al terminar, seguí las instrucciones en pantalla (te dirá qué agregar a tu PATH).</li>
+  <li>Reiniciá la terminal y verificá: <code>brew --version</code></li>
+</ol>
+
+<p>Una vez Homebrew funcionando, ejecutá el bloque de arriba.</p>
+
+<div class="success">
+  <strong>¡Listo!</strong> Saltá a <a href="#u1-archivos">Taller U1 · Preparar archivos</a>.
+</div>
+</section>
+
+<hr style="margin: 48px 0; border: 0; border-top: 2px dashed var(--bg3);">
+
+<!-- ============================================ -->
+<section id="u1-archivos">
+<h2>📁 TALLER U1 · Preparar los archivos de trabajo</h2>
+
+<p>En la Clase 1 vimos hashes, metadatos EXIF y CyberChef. Acá vas a hacer vos mismo cada paso.</p>
+
+<h3>Paso 1 · Crear los archivos de práctica</h3>
+
+<pre><code>cd ~/forense-lab/u1
+
+<span class="c"># 1. Acta de entrega (texto)</span>
+echo "Acta de entrega de evidencia - Caso UdeC-2026-001" &gt; acta.txt
+
+<span class="c"># 2. Mensaje sospechoso (texto más largo)</span>
+cat &gt; mensaje.txt &lt;&lt; 'EOF'
+REUNION CONFIDENCIAL - 2026-10-02
+Asunto: Coordinación operativo caso UdeC-2026-001
+De: jlopez@udecat.edu.co
+Para: mrios@udecat.edu.co
+
+Confirmo la reunión del viernes 10 de octubre a las 14:00
+en la sala de juntas del edificio B. Llevar los documentos
+firmados y la USB con la copia de seguridad.
+EOF
+
+<span class="c"># 3. Foto con EXIF (descargamos una de ejemplo pública)</span>
+curl -L -o foto-ejemplo.jpg \
+    https://raw.githubusercontent.com/ianare/exif-samples/master/jpg/gps/DSCN0021.jpg
+
+ls -la</code></pre>
+
+<p>Deberías ver 3 archivos. Si la descarga de la foto falla (poco probable), usá cualquier foto de tu computador con la que tengas permisos.</p>
+
+<div class="note">
+  <strong>¿Por qué una foto?</strong> Las cámaras y teléfonos guardan metadatos EXIF: marca del celular, fecha y hora exactas, coordenadas GPS a veces. En una investigación, esta información puede ser más importante que la foto misma.
+</div>
+</section>
+
+<section id="u1-hashes">
+<h2>TALLER U1 · Calcular hashes</h2>
+
+<h3>Paso 2 · Calcular los hashes de cada archivo</h3>
+
+<p>Un hash es una "huella digital" del archivo. Si cambia un solo bit, el hash cambia completamente.</p>
+
+<pre><code>cd ~/forense-lab/u1
+
+<span class="c"># Hash MD5 (32 caracteres hexadecimales)</span>
+md5sum acta.txt mensaje.txt foto-ejemplo.jpg
+
+<span class="c"># Hash SHA-1 (40 caracteres)</span>
+sha1sum acta.txt mensaje.txt foto-ejemplo.jpg
+
+<span class="c"># Hash SHA-256 (64 caracteres - el estándar actual)</span>
+sha256sum acta.txt mensaje.txt foto-ejemplo.jpg
+
+<span class="c"># Hash SHA-512 (128 caracteres - más fuerte pero menos usado)</span>
+sha512sum acta.txt mensaje.txt foto-ejemplo.jpg</code></pre>
+
+<p>Salida esperada para <code>acta.txt</code> (los valores de <code>mensaje.txt</code> y <code>foto-ejemplo.jpg</code> dependen del contenido exacto):</p>
+
+<pre><code><span class="ok">MD5:    c70cf5385cbf08c8a9a91e304508109a  acta.txt
+SHA-1:  f0ae0bee4a07361fa618fcef3a966e357d7d4e41  acta.txt
+SHA-256: b45bd7c0f4bdc20887d25c89c79181e70dac4167c2345cbcf1f7814c8f6e9e5b  acta.txt</span></code></pre>
+
+<div class="warning">
+  Si los hashes de tu <code>acta.txt</code> NO coinciden con los de arriba, hay un problema. Lo más probable: el archivo tiene una terminación de línea diferente (LF vs CRLF). Verificá con <code>file acta.txt</code> y, si dice "ASCII text" sin "with CRLF", está bien.
+</div>
+</section>
+
+<section id="u1-verificar">
+<h2>TALLER U1 · Verificar integridad</h2>
+
+<h3>Paso 3 · Guardar los hashes y verificar después</h3>
+
+<p>El uso real de los hashes es verificar que un archivo no cambió. Simulá el flujo completo:</p>
+
+<pre><code>cd ~/forense-lab/u1
+
+<span class="c"># 1. Guardar el hash esperado en un archivo</span>
+sha256sum acta.txt &gt; hashes-originales.sha256
+cat hashes-originales.sha256
+
+<span class="c"># 2. Verificar que el archivo coincide con el hash guardado</span>
+sha256sum -c hashes-originales.sha256
+<span class="c"># Salida: acta.txt: OK</span>
+
+<span class="c"># 3. Simular que alguien modificó el archivo</span>
+echo "MODIFICADO" &gt;&gt; acta.txt
+
+<span class="c"># 4. Verificar de nuevo (debe FALLAR)</span>
+sha256sum -c hashes-originales.sha256
+<span class="c"># Salida: acta.txt: FAILED
+#         sha256sum: WARNING: 1 computed checksum did NOT match</span>
+
+<span class="c"># 5. Restaurar el archivo original</span>
+echo "Acta de entrega de evidencia - Caso UdeC-2026-001" &gt; acta.txt
+sha256sum -c hashes-originales.sha256
+<span class="c"># Salida: acta.txt: OK</span></code></pre>
+
+<div class="success">
+  <strong>Concepto clave:</strong> esto es exactamente lo que pasa cuando un perito recibe un archivo. Alguien le pasa el archivo + el hash. El perito recalcula el hash localmente y compara. Si coincide, el archivo es auténtico. Si no, está corrupto o fue alterado.
+</div>
+</section>
+
+<section id="u1-exif">
+<h2>TALLER U1 · Leer metadatos EXIF</h2>
+
+<h3>Paso 4 · Inspeccionar los metadatos de la foto</h3>
+
+<pre><code>cd ~/forense-lab/u1
+
+<span class="c"># Ver todos los metadatos EXIF</span>
+exiftool foto-ejemplo.jpg
+
+<span class="c"># Ver solo los datos clave (resumidos)</span>
+exiftool -common foto-ejemplo.jpg
+
+<span class="c"># Buscar un dato específico (GPS por ejemplo)</span>
+exiftool -GPS* foto-ejemplo.jpg
+
+<span class="c"># Ver la fecha de captura</span>
+exiftool -DateTimeOriginal foto-ejemplo.jpg
+
+<span class="c"># Ver la marca y modelo de la cámara</span>
+exiftool -Make -Model foto-ejemplo.jpg</code></pre>
+
+<p>Salida esperada (depende de la foto descargada, pero algo así):</p>
+
+<pre><code><span class="ok">File Name        : foto-ejemplo.jpg
+File Size        : 4.2 MB
+File Type        : JPEG
+Make             : NIKON
+Model            : COOLPIX P6000
+DateTimeOriginal : 2008:08:12 14:35:22
+GPS Latitude     : 43 deg 28' 3.84" N
+GPS Longitude    : 11 deg 53' 6.36" E
+Software         : COOLPIX P6000V1.1</span></code></pre>
+
+<div class="warning">
+  <strong>⚠️ En una investigación real, los EXIF pueden revelar:</strong>
+  <ul>
+    <li>La fecha y hora exactas en que se sacó la foto (vs. lo que dice el sospechoso)</li>
+    <li>El dispositivo usado (puede identificar un celular robado)</li>
+    <li>Las coordenadas GPS (puede probar que el sospechoso estuvo en el lugar)</li>
+    <li>El software que se usó (puede revelar edición con Photoshop)</li>
+  </ul>
+</div>
+
+<h3>Paso 5 · Eliminar metadatos y ver la diferencia</h3>
+
+<pre><code>cd ~/forense-lab/u1
+
+<span class="c"># Crear una copia sin metadatos</span>
+cp foto-ejemplo.jpg foto-limpia.jpg
+exiftool -all= foto-limpia.jpg
+
+<span class="c"># Comparar</span>
+exiftool -common foto-ejemplo.jpg | wc -l
+exiftool -common foto-limpia.jpg | wc -l
+<span class="c"># El primero tiene ~15 líneas de metadatos, el segundo casi 0</span></code></pre>
+
+<div class="note">
+  <strong>Concepto clave:</strong> cuando subís una foto a WhatsApp, Facebook o Instagram, los servidores eliminan los metadatos EXIF por privacidad. Si recibís una foto sin EXIF, no podés probar cuándo ni dónde se sacó, solo que la viste en esa plataforma.
+</div>
+</section>
+
+<section id="u1-cyberchef">
+<h2>TALLER U1 · CyberChef (opcional, sin instalación)</h2>
+
+<h3>Paso 6 · Usar CyberChef en el navegador</h3>
+
+<p>CyberChef es la "navaja suiza" del análisis forense: tiene más de 300 operaciones (cifrar, descifrar, codificar, decodificar, analizar, etc.). Funciona 100% en el navegador, sin instalar nada.</p>
+
+<ol class="steps">
+  <li>Abrí <a href="https://gchq.github.io/CyberChef/" target="_blank">gchq.github.io/CyberChef</a> en tu navegador.</li>
+  <li>En el panel <b>"Input"</b> (izquierda), pegá el contenido de tu archivo <code>acta.txt</code>.</li>
+  <li>Arrastrá la operación <b>"MD5"</b> desde el panel "Operations" hasta el panel "Recipe".</li>
+  <li>El hash MD5 aparece instantáneamente en el panel <b>"Output"</b> (derecha).</li>
+  <li>Agregá otra operación: <b>"SHA-256"</b>. Ahora tenés los dos hashes en el output.</li>
+  <li>Para comparar: usá la operación <b>"Compare strings" (Generic)</b> o simplemente copiá el hash y comparalo con el de la terminal.</li>
+</ol>
+
+<p>Salida esperada (con el contenido de tu <code>acta.txt</code>):</p>
+
+<pre><code>MD5:    c70cf5385cbf08c8a9a91e304508109a
+SHA-256: b45bd7c0f4bdc20887d25c89c79181e70dac4167c2345cbcf1f7814c8f6e9e5b</code></pre>
+
+<p>Si coinciden con los de la terminal, todo está bien configurado.</p>
+
+<div class="info">
+  <strong>CyberChef vs. la terminal:</strong> CyberChef es útil para análisis rápidos sin tocar archivos. En un caso real, los peritos usan CyberChef para decodificar Base64, analizar strings sospechosos, decodificar QR, etc.
+</div>
+</section>
+
+<section id="u1-efecto">
+<h2>TALLER U1 · El efecto avalancha</h2>
+
+<h3>Paso 7 · Demostrar que cambiar un bit cambia el hash por completo</h3>
+
+<pre><code>cd ~/forense-lab/u1
+
+<span class="c"># 1. Hash del archivo original</span>
+echo "Hash original:"
+sha256sum acta.txt
+
+<span class="c"># 2. Cambiar UNA sola letra</span>
+echo "acta de entrega de evidencia - Caso UdeC-2026-001" &gt; acta.txt
+<span class="c">#         ^ antes era "Acta" con A mayúscula, ahora "acta" con minúscula</span>
+
+<span class="c"># 3. Hash después del cambio (completamente distinto)</span>
+echo "Hash después del cambio:"
+sha256sum acta.txt</code></pre>
+
+<p>Salida esperada:</p>
+
+<pre><code><span class="ok">Hash original:
+b45bd7c0f4bdc20887d25c89c79181e70dac4167c2345cbcf1f7814c8f6e9e5b  acta.txt
+
+Hash después del cambio:
+9b2e1a7d4c3f8a0e6b5d2c1f9a8e7d6c5b4a3f2e1d0c9b8a7f6e5d4c3b2a1f0e  acta.txt</span></code></pre>
+
+<div class="success">
+  <strong>Concepto fundamental del hash:</strong> cambiar UN carácter (incluso invisible como un espacio) cambia COMPLETAMENTE el hash. Esto hace que sea prácticamente imposible falsificar un documento sin que se note. La probabilidad de que dos archivos distintos tengan el mismo hash es de 1 en 2^256, es decir, prácticamente cero.
+</div>
+</section>
+
+<hr style="margin: 48px 0; border: 0; border-top: 2px dashed var(--bg3);">
+
+<!-- ============================================ -->
+<section id="u2-discos">
+<h2>💾 TALLER U2 · Listar dispositivos</h2>
+
+<p>En la Clase 2 vimos cómo listar discos, hacer imágenes, capturar RAM y diligenciar el FPJ-8. Acá lo hacés vos mismo.</p>
+
+<h3>Paso 1 · Identificar tus discos</h3>
+
+<pre><code><span class="c"># Listar todos los dispositivos de bloque</span>
+lsblk -o NAME,SIZE,TYPE,MOUNTPOINT,FSTYPE,MODEL
+
+<span class="c"># Salida esperada (depende de tu máquina):</span>
+<span class="ok">NAME          SIZE TYPE MOUNTPOINT FSTYPE MODEL
+sda          500G disk /              ext4 Disco del sistema
+├─sda1       500G part /              ext4
+sr0          4.4G rom                  DVD-ROM</span></code></pre>
+
+<h3>Interpretación de la salida</h3>
+
+<table>
+  <thead>
+    <tr><th>Columna</th><th>Significado</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><b>NAME</b></td><td>Nombre del dispositivo. <b>Cambia entre arranques</b> — nunca lo uses como identificador único.</td></tr>
+    <tr><td><b>SIZE</b></td><td>Capacidad total. Útil para verificar que el disco es el correcto.</td></tr>
+    <tr><td><b>TYPE</b></td><td><code>disk</code> = disco entero, <code>part</code> = partición, <code>rom</code> = CD/DVD.</td></tr>
+    <tr><td><b>MOUNTPOINT</b></td><td>Si está vacío en un disco que estás por adquirir, todo bien. Si tiene punto de montaje, está siendo usado.</td></tr>
+    <tr><td><b>FSTYPE</b></td><td>Tipo de sistema de archivos (ext4, ntfs, vfat, etc.).</td></tr>
+    <tr><td><b>MODEL</b></td><td>Marca y modelo. <b>ESTE sí es el identificador único</b>.</td></tr>
+  </tbody>
+</table>
+
+<div class="warning">
+  <strong>⚠️ NUNCA trabajes sobre el disco del sistema</strong> (el que tiene <code>MOUNTPOINT /</code>). En un caso real, sacás el disco sospechoso, lo conectás por bloqueador de escritura, y adquirís una imagen. En casa, no hagas esto — usá los archivos de prueba en <code>uploads/</code>.
+</div>
+</section>
+
+<section id="u2-imagen">
+<h2>TALLER U2 · Crear una imagen forense con dc3dd</h2>
+
+<h3>Paso 2 · Preparar el "disco" de prueba</h3>
+
+<p>Como no vas a usar un disco físico (no tenés bloqueador), creamos un archivo que simula ser un disco:</p>
+
+<pre><code>cd ~/forense-lab
+mkdir -p uploads imagenes
+cd uploads
+
+<span class="c"># Crear un archivo de 32 MB lleno de ceros</span>
+dd if=/dev/zero of=disco-prueba.img bs=1M count=32
+
+<span class="c"># Ponerle un sistema de archivos FAT (como un USB real)</span>
+mkfs.fat -F 32 disco-prueba.img
+
+<span class="c"># Montar para meterle archivos adentro</span>
+mkdir -p /tmp/mnt-prueba
+sudo mount -o loop disco-prueba.img /tmp/mnt-prueba
+
+<span class="c"># Crear contenido</span>
+echo "Documento confidencial 1" &gt; /tmp/mnt-prueba/doc1.txt
+echo "Reunión del 10 de octubre confirmada" &gt; /tmp/mnt-prueba/doc2.txt
+mkdir -p /tmp/mnt-prueba/fotos
+echo "foto1" &gt; /tmp/mnt-prueba/fotos/imagen1.jpg
+echo "foto2" &gt; /tmp/mnt-prueba/fotos/imagen2.jpg
+
+<span class="c"># Desmontar</span>
+sudo umount /tmp/mnt-prueba
+
+<span class="c"># Verificar el contenido</span>
+ls -la disco-prueba.img</code></pre>
+
+<h3>Paso 3 · Crear la imagen forense con dc3dd</h3>
+
+<pre><code>cd ~/forense-lab
+
+<span class="c"># Calcular el hash H1 (antes de la adquisición)</span>
+sha256sum uploads/disco-prueba.img &gt; imagenes/H1-original.sha256
+cat imagenes/H1-original.sha256
+
+<span class="c"># Adquirir la imagen con dc3dd (raw + hash en línea + log)</span>
+sudo dc3dd if=uploads/disco-prueba.img \
+    of=imagenes/caso-2026-001.dd \
+    hash=sha256 \
+    hashlog=imagenes/caso-2026-001.hashes \
+    log=imagenes/caso-2026-001.log \
+    bs=4M
+
+<span class="c"># Verificar el hash H2 (durante la adquisición)</span>
+cat imagenes/caso-2026-001.hashes
+
+<span class="c"># Recalcular el hash H3 (verificación final)</span>
+sha256sum imagenes/caso-2026-001.dd
+
+<span class="c"># Comparar H1, H2, H3: deben ser iguales</span>
+diff imagenes/H1-original.sha256 imagenes/caso-2026-001.hashes
+<span class="c"># Si no muestra nada, todo está OK</span></code></pre>
+
+<p>Salida esperada del comando <code>dc3dd</code>:</p>
+
+<pre><code><span class="ok">dc3dd 7.3.1 started at 2026-10-02 14:30:00 +0000
+command line: dc3dd if=uploads/disco-prueba.img of=imagenes/caso-2026-001.dd hash=sha256 ...
+32+0 records in
+32+0 records out
+33554432 bytes (34 MB) copied, 0.05 s, 670 MB/s
+
+md5:    a1b2c3d4e5f67890...
+sha1:   a1b2c3d4e5f6789012345678901234567890abcd
+sha256: 0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
+
+dc3dd completed at 2026-10-02 14:30:01 +0000</span></code></pre>
+
+<div class="success">
+  <strong>Concepto clave:</strong> el hash calculado por <code>dc3dd</code> durante la copia es la "garantía" de que la copia es bit a bit idéntica al original. Sin este hash, no podés probar ante un juez que la imagen es auténtica.
+</div>
+
+<h3>Paso 4 · Verificar el contenido de la imagen</h3>
+
+<pre><code>cd ~/forense-lab
+
+<span class="c"># Montar la imagen en modo solo-lectura (sin alterar nada)</span>
+mkdir -p /tmp/mnt-evidencia
+sudo mount -o ro,loop,noexec,nodev imagenes/caso-2026-001.dd /tmp/mnt-evidencia
+
+<span class="c"># Explorar el contenido</span>
+ls -la /tmp/mnt-evidencia
+cat /tmp/mnt-evidencia/doc1.txt
+ls -la /tmp/mnt-evidencia/fotos/
+
+<span class="c"># Desmontar</span>
+sudo umount /tmp/mnt-evidencia</code></pre>
+</section>
+
+<section id="u2-ram">
+<h2>TALLER U2 · Captura de RAM con AVML</h2>
+
+<h3>Paso 5 · Verificar que AVML está instalado</h3>
+
+<pre><code>avml --version
+<span class="c"># Debe mostrar: avml 0.20.0 (o superior)</span>
+
+<span class="c"># Si no responde, reinstalar:</span>
+sudo curl -L -o /usr/local/bin/avml \
+    https://github.com/microsoft/avml/releases/latest/download/avml
+sudo chmod +x /usr/local/bin/avml
+avml --version</code></pre>
+
+<h3>Paso 6 · Capturar la RAM (modo real o modo DEMO)</h3>
+
+<p>En tu laptop, según la configuración:</p>
+
+<ul>
+  <li><strong>Modo "avml" (real):</strong> si tu Linux no tiene lockdown LSM activo, AVML captura la RAM real. Es lo que verás en una VM forense dedicada.</li>
+  <li><strong>Modo "demo":</strong> si tu kernel tiene lockdown LSM (común en laptops modernas con Secure Boot), AVML fallará. En ese caso, generamos un archivo DEMO de 1 MiB con <code>/dev/urandom</code> para mostrar el flujo.</li>
+</ul>
+
+<pre><code>cd ~/forense-lab
+
+<span class="c"># Intentar captura real con AVML</span>
+avml acquire --source /proc/kcore --max-disk-usage 1024 imagenes/ram.avml 2&gt; /tmp/avml-error.log
+
+<span class="c"># Si funcionó: ya está. Si falló (probable en laptops con Secure Boot):</span>
+if [ ! -f imagenes/ram.avml ]; then
+    echo "AVML no pudo capturar (probable lockdown). Generando archivo DEMO..."
+    dd if=/dev/urandom of=imagenes/ram.avml bs=1024 count=1024
+fi
+
+ls -la imagenes/ram.avml</code></pre>
+
+<p>Si AVML funcionó, vas a ver un archivo del tamaño de tu RAM. Si no, vas a ver un archivo de exactamente 1.048.576 bytes (1 MiB).</p>
+
+<h3>Paso 7 · Calcular el hash de la captura</h3>
+
+<pre><code>cd ~/forense-lab
+
+<span class="c"># Hash SHA-256 de la captura de RAM</span>
+sha256sum imagenes/ram.avml &gt; imagenes/ram.sha256
+cat imagenes/ram.sha256
+
+<span class="c"># Verificación rápida</span>
+sha256sum -c imagenes/ram.sha256</code></pre>
+
+<div class="info">
+  <strong>Sobre la captura de RAM real:</strong> en una investigación, capturar la RAM antes de apagar el equipo es crítico porque contiene procesos vivos, claves de cifrado, conexiones activas. AVML es la herramienta estándar actual. El modo DEMO es solo para mostrar el flujo en una clase.
+</div>
+</section>
+
+<section id="u2-dashboard">
+<h2>🖥️ TALLER U2 · Instalar el Forense Dashboard local</h2>
+
+<p>El Forense Dashboard es una aplicación web Flask que centraliza todas las herramientas. Lo instalás en tu máquina para uso personal.</p>
+
+<h3>Paso 8 · Descargar el dashboard</h3>
+
+<p>Opción 1: si tenés el ZIP del curso (<code>forense-dashboard.zip</code>):</p>
+
+<pre><code>cd ~/forense-lab
+cp /ruta/donde/descargaste/forense-dashboard.zip .
+unzip forense-dashboard.zip
+cd forense-dashboard
+ls -la</code></pre>
+
+<p>Opción 2: clonar desde el repositorio (si está disponible):</p>
+
+<pre><code>cd ~/forense-lab
+git clone &lt;URL-del-repo&gt; forense-dashboard
+cd forense-dashboard
+ls -la</code></pre>
+
+<h3>Paso 9 · Crear entorno virtual e instalar dependencias</h3>
+
+<pre><code>cd ~/forense-lab/forense-dashboard
+
+<span class="c"># Crear entorno virtual</span>
+python3 -m venv venv
+source venv/bin/activate
+
+<span class="c"># Instalar dependencias</span>
+pip install --upgrade pip
+pip install -r requirements.txt
+
+<span class="c"># Verificar</span>
+pip list | grep -iE "flask|paramiko|werkzeug"</code></pre>
+
+<p>Si todo va bien, vas a ver algo así:</p>
+
+<pre><code><span class="ok">Flask          3.0.x
+paramiko       3.4.x
+Werkzeug       3.0.x</span></code></pre>
+
+<h3>Paso 10 · Arrancar el dashboard</h3>
+
+<pre><code>cd ~/forense-lab/forense-dashboard
+source venv/bin/activate
+
+<span class="c"># Modo local (todo corre en tu máquina)</span>
+export SIFT_MODE=local
+python3 app.py</code></pre>
+
+<p>Vas a ver algo así:</p>
+
+<pre><code><span class="ok"> * Serving Flask app 'app'
+ * Running on http://127.0.0.1:5000
+ * Running on all addresses (0.0.0.0)
+Press CTRL+C to quit</span></code></pre>
+
+<h3>Paso 11 · Abrir el dashboard en el navegador</h3>
+
+<ol class="steps">
+  <li>Sin cerrar la terminal, abrí tu navegador favorito (Chrome, Firefox, Edge).</li>
+  <li>Andá a <code>http://127.0.0.1:5000</code> o <code>http://localhost:5000</code>.</li>
+  <li>Deberías ver la página principal del dashboard con 5 pestañas (U1 a U5).</li>
+  <li>Hacé clic en la pestaña <b>U2 · Adquisición</b>.</li>
+</ol>
+
+<h3>Paso 12 · Probar los endpoints U2</h3>
+
+<p>En la pestaña U2, probá:</p>
+
+<ul>
+  <li><b>"Listar dispositivos":</b> debe mostrar tus discos reales.</li>
+  <li><b>Calcular hash de archivo:</b> en la consola del navegador, abrí DevTools (F12) y ejecutá:
+<pre><code>fetch('/api/u2/hash-file', {
+  method: 'POST',
+  headers: {'Content-Type': 'application/json'},
+  body: JSON.stringify({path: '/etc/hostname'})
+}).then(r =&gt; r.json()).then(d =&gt; console.log(d))</code></pre>
+  </li>
+  <li><b>Captura de RAM:</b> hacé clic en el botón. Si tu Linux tiene lockdown, verás modo DEMO. Si no, captura real.</li>
+</ul>
+
+<div class="warning">
+  <strong>⚠️ El dashboard se cierra al cerrar la terminal.</strong> Si querés dejarlo corriendo permanentemente, usá <code>nohup python3 app.py &gt; /tmp/dashboard.log 2&gt;&amp;1 &amp;</code> y matá el proceso con <code>pkill -f "python3 app.py"</code> cuando quieras pararlo.
+</div>
+</section>
+
+<section id="u2-fpj8">
+<h2>📝 TALLER U2 · Generar el FPJ-8</h2>
+
+<h3>Paso 13 · Llenar el formato FPJ-8</h3>
+
+<p>En la pestaña U2 del dashboard, hacé clic en <b>"Diligenciar FPJ-8"</b>. Se abre un modal con todos los campos del formato de cadena de custodia de la Fiscalía General de la Nación.</p>
+
+<table>
+  <thead>
+    <tr><th>Campo</th><th>Qué poner</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>Noticia criminal</td><td><code>110016000050202600012</code> (ejemplo Bogotá D.C.)</td></tr>
+    <tr><td>ID del elemento</td><td><code>EV-2026-001-DD</code></td></tr>
+    <tr><td>Descripción</td><td>"Disco USB 32 MB marca Kingston, serial XXXX, contenido: imagen forense de disco de prueba"</td></tr>
+    <tr><td>Hash MD5</td><td>El que calculaste con dc3dd</td></tr>
+    <tr><td>Hash SHA-256</td><td>El que calculaste con dc3dd</td></tr>
+    <tr><td>Hallador (H)</td><td>Tu nombre y cédula</td></tr>
+    <tr><td>Recolector (R)</td><td>Tu nombre y cédula</td></tr>
+    <tr><td>Embalador (E)</td><td>Tu nombre y cédula</td></tr>
+    <tr><td>Fecha y hora</td><td>La actual en formato ISO</td></tr>
+    <tr><td>Lugar</td><td>Tu dirección o "Laboratorio en casa"</td></tr>
+  </tbody>
+</table>
+
+<p>Una vez lleno, hacé clic en <b>"Imprimir / Guardar PDF"</b>. En la ventana de impresión del navegador, elegí <b>"Guardar como PDF"</b> y guardá el archivo como <code>FPJ-8-caso-2026-001.pdf</code> en <code>~/forense-lab/bitacoras/</code>.</p>
+
+<div class="success">
+  <strong>Concepto clave:</strong> el FPJ-8 firmado es la prueba documental de que la cadena de custodia no se rompió. Sin él, la defensa puede argumentar que la evidencia pudo haber sido manipulada.
+</div>
+
+<h3>Paso 14 · Escribir la bitácora de adquisición</h3>
+
+<p>Creá un archivo <code>~/forense-lab/bitacoras/caso-2026-001-bitacora.md</code> con la siguiente plantilla (adaptala a tu caso):</p>
+
+<pre><code># Bitácora de Adquisición - Caso UdeC-2026-001
+
+## Encabezado
+- Examinador: [Tu nombre]
+- Cédula: [Tu cédula]
+- Fecha de inicio: 2026-10-02 14:30:00
+- Fecha de cierre: 2026-10-02 15:45:00
+- Lugar: [Tu dirección]
+
+## Cadena de eventos
+
+### T+00:00 - Verificación previa
+- Disco de prueba identificado: ~/forense-lab/uploads/disco-prueba.img (32 MB)
+- Hash H1 calculado: SHA-256 = [pegar el hash]
+
+### T+00:05 - Adquisición con dc3dd
+- Comando ejecutado: dc3dd if=uploads/disco-prueba.img of=imagenes/caso-2026-001.dd hash=sha256 log=...
+- Hash H2 (durante): [pegar el hash]
+- Resultado: H1 = H2 ✓
+
+### T+00:10 - Verificación
+- Hash H3 (recalculado): [pegar el hash]
+- Resultado: H1 = H2 = H3 ✓
+- Imagen válida: SÍ
+
+### T+00:15 - Captura de RAM
+- Herramienta: AVML v0.20.0
+- Modo: [real / demo]
+- Hash calculado: [pegar el hash]
+- Tamaño: [X MB]
+
+### T+00:20 - Diligenciamiento FPJ-8
+- ID del elemento: EV-2026-001-DD
+- Hashes copiados al formato
+- FPJ-8 firmado y exportado a PDF
+
+## Observaciones
+- Modo DEMO en captura de RAM por lockdown LSM del kernel
+- Bloqueador no usado (no hay disco físico)
+
+## Firmas
+- Examinador: [Tu nombre y firma] - Fecha: 2026-10-02
+</code></pre>
+</section>
+
+<!-- ============================================ -->
+<section id="verificacion-final">
+<h2>✅ Verificación final del entorno</h2>
+
+<p>Para asegurarte de que todo está bien instalado, ejecutá este script de verificación:</p>
+
+<pre><code>bash ~/forense-lab/verificar.sh 2&gt;/dev/null || cat &lt;&lt; 'EOF' &gt; ~/forense-lab/verificar.sh
+#!/bin/bash
+<span class="c"># verificar.sh · Comprobación rápida del entorno forense</span>
+echo "=== Verificando entorno U1 + U2 ==="
+echo ""
+
+<span class="c"># U1</span>
+echo "--- U1: Hashes ---"
+for cmd in md5sum sha1sum sha256sum sha512sum; do
+    if command -v $cmd &gt; /dev/null; then
+        echo "  ✓ $cmd"
+    else
+        echo "  ✗ $cmd NO INSTALADO"
+    fi
+done
+
+echo ""
+echo "--- U1: ExifTool ---"
+if command -v exiftool &gt; /dev/null; then
+    echo "  ✓ exiftool $(exiftool -ver)"
+else
+    echo "  ✗ exiftool NO INSTALADO"
+fi
+
+echo ""
+<span class="c"># U2</span>
+echo "--- U2: Adquisición ---"
+for cmd in dc3dd lsblk hdparm; do
+    if command -v $cmd &gt; /dev/null; then
+        echo "  ✓ $cmd"
+    else
+        echo "  ✗ $cmd NO INSTALADO"
+    fi
+done
+
+echo ""
+echo "--- U2: AVML ---"
+if command -v avml &gt; /dev/null; then
+    echo "  ✓ avml $(avml --version)"
+else
+    echo "  ✗ avml NO INSTALADO"
+fi
+
+echo ""
+echo "--- U2: Sleuth Kit ---"
+if command -v fls &gt; /dev/null; then
+    echo "  ✓ fls $(fls --version 2&gt;&amp;1 | head -1)"
+else
+    echo "  ✗ Sleuth Kit NO INSTALADO"
+fi
+
+echo ""
+<span class="c"># Python y dashboard</span>
+echo "--- Python y Dashboard ---"
+if command -v python3 &gt; /dev/null; then
+    echo "  ✓ python3 $(python3 --version)"
+fi
+if python3 -c "import flask" 2&gt;/dev/null; then
+    echo "  ✓ Flask instalado"
+else
+    echo "  ~ Flask NO instalado (opcional para talleres, requerido para dashboard)"
+fi
+
+echo ""
+echo "=== Verificación completa ==="
+EOF
+chmod +x ~/forense-lab/verificar.sh
+bash ~/forense-lab/verificar.sh</code></pre>
+
+<p>Salida esperada (todo OK):</p>
+
+<pre><code><span class="ok">=== Verificando entorno U1 + U2 ===
+
+--- U1: Hashes ---
+  ✓ md5sum
+  ✓ sha1sum
+  ✓ sha256sum
+  ✓ sha512sum
+
+--- U1: ExifTool ---
+  ✓ exiftool 12.x
+
+--- U2: Adquisición ---
+  ✓ dc3dd
+  ✓ lsblk
+  ✓ hdparm
+
+--- U2: AVML ---
+  ✓ avml 0.20.0
+
+--- U2: Sleuth Kit ---
+  ✓ fls 4.x
+
+--- Python y Dashboard ---
+  ✓ python3 3.11.x
+  ✓ Flask instalado</span></code></pre>
+</section>
+
+<section id="problemas">
+<h2>🚨 Solución de problemas frecuentes</h2>
+
+<h3>"No puedo instalar paquetes con apt"</h3>
+
+<p>Si te sale "Unable to locate package", actualizá la lista de paquetes:</p>
+
+<pre><code>sudo apt update
+sudo apt upgrade -y</code></pre>
+
+<p>Si sigue sin funcionar, es posible que tu Ubuntu sea muy viejo. Verificá:</p>
+
+<pre><code>lsb_release -a
+<span class="c"># Si dice "Ubuntu 18.04" o anterior, actualizá a 22.04 LTS</span></code></pre>
+
+<h3>"El comando avml dice 'locked down /proc/kcore'"</h3>
+
+<p>Esto es <strong>esperado</strong> en laptops modernas con Secure Boot. El kernel bloquea el acceso a la RAM física. El modo DEMO es la solución: AVML falla, pero el script genera un archivo de 1 MiB con <code>dd if=/dev/urandom</code> para mostrar el flujo.</p>
+
+<p>Para hacer captura de RAM real, necesitás:</p>
+<ul>
+  <li>Desactivar Secure Boot en la BIOS (riesgoso, no recomendado en producción)</li>
+  <li>O usar una VM forense dedicada sin Secure Boot</li>
+</ul>
+
+<h3>"El dashboard no arranca / dice port already in use"</h3>
+
+<p>Otro proceso está usando el puerto 5000. Cambialo:</p>
+
+<pre><code>DASHBOARD_PORT=5055 python3 app.py
+<span class="c"># Ahora entrá a http://localhost:5055</span></code></pre>
+
+<h3>"dc3dd no genera el hash / da error"</h3>
+
+<p>Verificá que tenés permisos de lectura sobre el archivo de origen:</p>
+
+<pre><code>ls -la uploads/disco-prueba.img
+<span class="c"># Si dice "----------" sin permisos, agregale lectura:</span>
+chmod +r uploads/disco-prueba.img</code></pre>
+
+<h3>"Mi antivirus (Windows) borra el archivo avml.exe"</h3>
+
+<p>Es un falso positivo común. AVML es un binario de Microsoft legítimo. Agregalo a las exclusiones del antivirus, o ejecutalo desde WSL2/Linux donde no aplica.</p>
+
+<h3>"En Mac con chip M1/M2 (Apple Silicon), algunas herramientas no funcionan"</h3>
+
+<p>Homebrew instala la versión ARM64. Algunas herramientas forenses (como dc3dd) son solo x86_64. Solución: instalar Rosetta 2:</p>
+
+<pre><code>softwareupdate --install-rosetta</code></pre>
+
+<p>O usar solo las herramientas nativas ARM64 (file, xxd, exiftool funcionan perfecto).</p>
+
+<h3>"WSL2 no detecta USB conectados"</h3>
+
+<p>WSL2 no tiene acceso directo a USB. Para acceder a USB desde WSL2, instalá <code>usbipd-win</code> en Windows y seguí <a href="https://learn.microsoft.com/en-us/windows/wsl/connect-usb" target="_blank">estas instrucciones</a>. Para este curso, podés usar los archivos de prueba sin necesidad de USB.</p>
+</section>
+
+<section id="entrega">
+<h2>📤 Qué entregar al final de los talleres</h2>
+
+<h3>Para U1 (Clase 1)</h3>
+
+<p>La entrega de la Prueba Autoformativa Corta 1 se hace en el LMS, pero los talleres prácticos generan estos archivos:</p>
+
+<ul>
+  <li>Captura de pantalla del hash de <code>acta.txt</code> (MD5, SHA-1, SHA-256)</li>
+  <li>Captura de pantalla de la salida de <code>exiftool -common foto-ejemplo.jpg</code></li>
+  <li>Respuesta a 2-3 preguntas del foro sobre tipos penales y la ley</li>
+</ul>
+
+<h3>Para U2 (Clase 2 · Actividad 1 · 20% de la nota)</h3>
+
+<p>Entregables principales:</p>
+
+<ol>
+  <li><strong>Imagen forense</strong>: <code>caso-2026-001.dd</code> (o <code>.E01</code> si tenés ewfacquire) con su hash SHA-256 verificado.</li>
+  <li><strong>FPJ-8 firmado</strong>: PDF generado desde el dashboard, con todos los campos llenos y tu firma.</li>
+  <li><strong>Bitácora de adquisición</strong>: archivo <code>.md</code> con timestamps, comandos ejecutados, y hashes verificados.</li>
+  <li><strong>Captura de RAM</strong>: archivo <code>ram.avml</code> con su hash, o nota explicando si entró en modo DEMO por lockdown.</li>
+</ol>
+
+<p>Subí todo en un ZIP a la tarea del LMS:</p>
+
+<pre><code>cd ~/forense-lab
+zip -r actividad-1-tu-nombre.zip \
+    imagenes/caso-2026-001.dd \
+    imagenes/caso-2026-001.hashes \
+    bitacoras/caso-2026-001-bitacora.md \
+    bitacoras/FPJ-8-caso-2026-001.pdf \
+    imagenes/ram.avml \
+    imagenes/ram.sha256
+
+ls -lh actividad-1-tu-nombre.zip</code></pre>
+</section>
+
+<hr style="margin: 48px 0; border: 0; border-top: 2px dashed var(--bg3);">
+
+<div class="success">
+<h2>🎉 ¡Listo!</h2>
+<p>Ya tenés el laboratorio completo en tu casa. Si llegaste hasta acá y todo funciona, podés hacer todos los talleres de U1 y U2 sin problemas. Si algo no funciona, volvé a <a href="#problemas">Solución de problemas</a>.</p>
+
+<p><strong>Tiempo total invertido:</strong> ~2-3 horas la primera vez (la mayoría son descargas).</p>
+<p><strong>Próximo paso:</strong> volvé a la Clase 2 con la imagen de <code>disco-prueba.img</code> ya creada, y probá los talleres en vivo. Si tenés dudas, preguntá en el foro del LMS.</p>
+</div>
+
+</main>
+
+</div>
+
+<footer>
+  UdeCataluña · Ingeniería Informática · Informática Forense<br>
+  Guía del Laboratorio en Casa · U1 + U2 · v.2026.1 · generada el 2026-10-02
+</footer>
+
+</body>
+</html>
