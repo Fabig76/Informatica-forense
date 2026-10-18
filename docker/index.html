@@ -12,231 +12,311 @@
 <h1>Laboratorio de Informática Forense</h1>
 <p class="subtitulo">Universidad de Cataluña · Ingeniería Informática · Cohorte 2026-II</p>
 
-<div class="lab-acceso">
-<p class="lab-titulo"><strong>Cómo correr el laboratorio en tu computador</strong></p>
-<p>Tres comandos. Necesitas Docker instalado localmente (no en la nube).</p>
-<pre><code>docker pull fabiguaza76/inforense:v1
-docker run -d --name lab-forense -p 8080:80 fabiguaza76/inforense:v1
-# Abrí http://localhost:8080/ en tu navegador</code></pre>
-<p><small>Si tienes Apple Silicon (M1/M2/M3/M4), el laboratorio es x86
-y funcionará con la emulación de Docker Desktop, aunque más lento. Para
-mejor experiencia, usa un equipo Intel o AMD con 8 GB RAM y 25 GB libres.</small></p>
-</div>
-</header>
-
 <nav class="pestanas" id="pestanas">
 <button class="pestana activa" data-caso="caso1">Caso 1 · Hashes</button>
 <button class="pestana" data-caso="caso2">Caso 2 · Adquisición</button>
 <button class="pestana" data-caso="caso3">Caso 3 · NTFS</button>
 <button class="pestana" data-caso="caso4">Caso 4 · Red y memoria</button>
 <button class="pestana" data-caso="caso5">Caso 5 · Dictamen</button>
+<button class="pestana" data-caso="instalacion">Cómo correr el laboratorio</button>
 </nav>
 
 <main>
 
+<!-- ════════════════════════════════════════════════ INSTALACIÓN -->
+<section class="caso activa" id="instalacion">
+<h2>Cómo correr el laboratorio en tu computador</h2>
+<p class="subtitulo">Antes de practicar los casos, necesitás tener Docker instalado y saber qué hace cada comando.</p>
+
+<h3>¿Qué es Docker y por qué lo usamos aquí?</h3>
+<p>Docker es un programa que ejecuta "mini-computadoras" virtuales dentro de tu computador real. Cada una de esas mini-computadoras se llama <strong>contenedor</strong> y arranca en segundos con todo preinstalado: las 56 herramientas forenses (Sleuth Kit, tshark, Volatility, etc.), la evidencia sintética (imágenes FAT32, NTFS, PCAP) y los enunciados.</p>
+
+<p>Sin Docker, tendrías que instalar a mano 30+ herramientas en tu computador, configurar sus dependencias, y descargar las imágenes de evidencia manualmente. Con Docker, son tres comandos y el laboratorio está listo.</p>
+
+<p><strong>El laboratorio corre 100% en tu computador.</strong> No toca internet después de descargar la imagen. La evidencia es sintética y todas las acciones quedan en una carpeta local <code>~/trabajo</code> dentro del contenedor.</p>
+
+<hr>
+
+<h3>Paso 1 · Instala Docker en tu computador</h3>
+<p>Estos son los enlaces oficiales. Elige el que corresponda a tu sistema operativo.</p>
+
+<table>
+<thead>
+<tr><th>Sistema</th><th>Instrucciones</th><th>Tiempo aprox.</th></tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Windows 10/11</strong></td>
+<td><a href="https://docs.docker.com/desktop/install/windows-install/" target="_blank" rel="noopener">docs.docker.com/desktop/install/windows-install/</a><br>
+Abre el instalador, sigue los pasos, reinicia si lo pide. Activa WSL 2 cuando lo pregunte.</td>
+<td>10 min</td>
+</tr>
+<tr>
+<td><strong>macOS (Intel o Apple Silicon)</strong></td>
+<td><a href="https://docs.docker.com/desktop/install/mac-install/" target="_blank" rel="noopener">docs.docker.com/desktop/install/mac-install/</a><br>
+Descarga el .dmg, arrastra Docker a Aplicaciones, ábrelo. Si tienes chip Apple (M1/M2/M3/M4), la imagen corre con emulación (más lento, ~3-5x).</td>
+<td>5 min</td>
+</tr>
+<tr>
+<td><strong>Ubuntu / Debian</strong></td>
+<td><code>sudo apt-get update && sudo apt-get install docker.io</code><br>
+Agrega tu usuario al grupo <code>docker</code> para no usar <code>sudo</code> en cada comando:</td>
+<td>5 min</td>
+</tr>
+</tbody>
+</table>
+
+<p><strong>Verifica que quedó instalado.</strong> Abre una terminal y ejecuta:</p>
+<pre><code>docker --version</code></pre>
+<p>Debes ver algo como <code>Docker version 24.0.7, build ...</code>. Si ves error, revisa la guía de tu sistema operativo.</p>
+
+<h3>Paso 2 · Descarga la imagen del laboratorio</h3>
+<p>Esto baja los 1.2 GB del laboratorio a tu computador. La imagen ya viene con todo: Ubuntu, las 56 herramientas, la evidencia sintética y el portal web interno. Solo lo haces una vez; después queda en caché.</p>
+
+<pre><code>docker pull fabiguaza76/inforense:v1</code></pre>
+
+<p><strong>¿Dónde corre esto?</strong> En la misma terminal donde escribiste <code>docker --version</code>. Es decir, en TU computador (no en un servidor). El comando se conecta a Docker Hub (el registro público de Docker) y descarga la imagen al disco duro de tu computador.</p>
+
+<p>Tarda entre 2 y 10 minutos según tu conexión a internet. Verás una barra de progreso con varias capas (cada capa es una parte de la imagen).</p>
+
+<h3>Paso 3 · Arranca el contenedor</h3>
+<p>Este es el comando principal del laboratorio. Crea un contenedor (la mini-computadora) a partir de la imagen, expone el puerto 80 del contenedor como 8080 de tu computador (<code>-p 8080:80</code>), y lo deja corriendo en segundo plano (<code>-d</code>).</p>
+
+<pre><code>docker run -d --name lab-forense \
+              -p 8080:80 \
+              --memory=2g \
+              fabiguaza76/inforense:v1</code></pre>
+
+<p><strong>¿Qué hace cada parte?</strong></p>
+<ul>
+<li><code>-d</code> — "Detached". El contenedor corre en segundo plano y tu terminal queda libre para otros comandos.</li>
+<li><code>--name lab-forense</code> — le da un nombre para que puedas referirte a él fácilmente (<code>docker stop lab-forense</code>, <code>docker exec ...</code>).</li>
+<li><code>-p 8080:80</code> — mapea el puerto 80 del contenedor al 8080 de tu computador. Cuando abras <code>http://localhost:8080</code> en tu navegador, hablarás con el servidor web del contenedor.</li>
+<li><code>--memory=2g</code> — limita la RAM a 2 GB (suficiente para todas las herramientas).</li>
+<li><code>fabiguaza76/inforense:v1</code> — el nombre exacto de la imagen en Docker Hub, con su etiqueta <code>v1</code>.</li>
+</ul>
+
+<p>Cuando termina, el comando imprime algo como <code>abc123def456...</code>: es el ID del contenedor. Guárdalo por si acaso.</p>
+
+<h3>Paso 4 · Abre el laboratorio en tu navegador</h3>
+<p>Abre tu navegador (Chrome, Firefox, Safari, Edge — cualquiera) y entra a:</p>
+
+<pre><code>http://localhost:8080/</code></pre>
+
+<p>Vas a ver el portal del laboratorio: una página con cinco pestañas (uno por caso), un bloque azul arriba con los comandos que ejecutaste, y al pie, enlaces al sistema de entregas. Esta es tu puerta de entrada a todo lo que vas a hacer.</p>
+
+<p>Si la página no carga, verifica que el contenedor está corriendo:</p>
+
+<pre><code>docker ps</code></pre>
+<p>El contenedor <code>lab-forense</code> debe aparecer como <code>Up X minutes</code>. Si no aparece, revisa los logs:</p>
+<pre><code>docker logs lab-forense | tail -20</code></pre>
+
+<h3>Paso 5 · Accede a la terminal del contenedor (opcional)</h3>
+<p>Para la mayoría de los casos no necesitás la terminal; el portal muestra cada comando en bloques copiables. Pero en algunas situaciones (incluir archivos, instalar algo extra, ver archivos ocultos), puedes abrir una terminal dentro del contenedor:</p>
+
+<pre><code>docker exec -it lab-forense bash</code></pre>
+<p>Apareces como <code>root</code>. Si prefieres el usuario <code>perito</code> (que es el que tiene acceso a <code>~/trabajo</code>):</p>
+<pre><code>docker exec -u perito -it lab-forense bash</code></pre>
+<p>Para salir, escribe <code>exit</code> o presiona <code>Ctrl+D</code>.</p>
+
+<h3>Paso 6 · Apaga el laboratorio cuando termines</h3>
+<p>El contenedor consume 2 GB de RAM mientras corre. Cuando termines tu sesión:</p>
+<pre><code>docker stop lab-forense</code></pre>
+<p>El contenedor queda apagado pero la imagen (1.2 GB) sigue en disco. Para borrar el contenedor y empezar limpio la próxima vez:</p>
+<pre><code>docker rm -f lab-forense
+docker run -d --name lab-forense -p 8080:80 --memory=2g fabiguaza76/inforense:v1</code></pre>
+
+<hr>
+
+<h3>Lista de comprobación · Antes de empezar los casos</h3>
+<ul>
+<li><input type="checkbox"> <code>docker --version</code> responde con un número de versión.</li>
+<li><input type="checkbox"> <code>docker pull fabiguaza76/inforense:v1</code> terminó sin error.</li>
+<li><input type="checkbox"> <code>docker ps</code> muestra el contenedor <code>lab-forense</code> como <code>Up</code>.</li>
+<li><input type="checkbox"> <code>http://localhost:8080/</code> carga el portal del laboratorio.</li>
+<li><input type="checkbox"> Las cinco pestañas del portal muestran su contenido.</li>
+<li><input type="checkbox"> Tienes cuenta en GitHub (para hacer las entregas).</li>
+</ul>
+
+<p>Cuando todo esté marcado, empezá con la pestaña <strong>Caso 1</strong>.</p>
+</section>
+
 <!-- ════════════════════════════════════════════════ CASO 1 -->
-<section class="caso activa" id="caso1">
-<h2>Caso 1 · Fundamentos</h2>
-<p class="subtitulo">Hashes, integridad y rótulos · Lo que enseña un perito cuando apenas empieza.</p>
-<p class="frase"><em>En una frase.</em> Calcule y verifique el SHA-256 del acta del caso, distinga entre integridad y autenticidad, y llene un rótulo de cadena de custodia.</p>
+<section class="caso" id="caso1">
+<h2>Caso 1 · Fundamentos: hashes e integridad</h2>
+<p class="subtitulo">Lo que enseña un perito cuando apenas empieza: el acta debe ser idéntica bit a bit a la que se firmó en el momento de la cadena de custodia.</p>
 
-<h3>Qué va a hacer</h3>
-<p>Tres pasos. Abra una terminal dentro del contenedor (en la web del laboratorio, hay una terminal interactiva) y ejecute los comandos.</p>
+<h3>Objetivo</h3>
+<p>Calcular y verificar el hash SHA-256 del acta del caso, demostrar que la copia es idéntica bit a bit al original, y dejar constancia en un mini-informe de lo que encontraste.</p>
 
-<h4>Paso 1 · Calcule el SHA-256 del acta</h4>
-<pre><code>sha256sum /evidencia/caso1/acta.txt</code></pre>
-<p>Va a obtener 64 caracteres hexadecimales. Anótelos.</p>
-
-<h4>Paso 2 · Verifique con el archivo .sha256</h4>
-<pre><code>sha256sum -c /evidencia/caso1/acta.sha256</code></pre>
-<p>Si la huella coincide, el sistema responde <code>acta.txt: OK</code>.</p>
-
-<h4>Paso 3 · Identifique el archivo</h4>
-<pre><code>file /evidencia/caso1/acta.txt</code></pre>
-
-<h3>Lo que entrega</h3>
-<p>Un mini-informe (cinco líneas, en <code>~/trabajo/caso1.txt</code>) con:</p>
+<h3>Lo que vas a hacer</h3>
+<p>Tres comandos en cualquier orden, dentro del contenedor (terminal o vía la pestaña de la página).</p>
 <ol>
-<li>El SHA-256 calculado en el Paso 1.</li>
-<li>Si coincide con el del Paso 2 (Sí/No).</li>
-<li>El tipo de archivo que reporta <code>file</code>.</li>
-<li>La fecha del cálculo.</li>
-<li>Conclusión: "La integridad del acta está demostrada" o detalle de qué falló.</li>
+<li><strong>Calcular el SHA-256</strong> del archivo <code>/evidencia/caso1/acta.txt</code> con <code>sha256sum</code>. Anotás los 64 caracteres hexadecimales.</li>
+<li><strong>Verificar</strong> con <code>sha256sum -c /evidencia/caso1/acta.sha256</code>. El sistema debe responder <code>acta.txt: OK</code>.</li>
+<li><strong>Identificar el archivo</strong> con <code>file /evidencia/caso1/acta.txt</code>. Te confirma que es texto plano UTF-8.</li>
 </ol>
 
-<h3>Errores que se cometen</h3>
-<dl>
-<dt>"Pego el hash y ya está"</dt>
-<dd>Sin <code>sha256sum -c</code>, solo pegó números. El <code>-c</code> es el procedimiento legal.</dd>
-<dt>"MD5 es lo mismo"</dt>
-<dd>MD5 tiene colisiones prácticas desde 2004. Use SHA-256 como hash principal.</dd>
-<dt>"El hash prueba que no se modificó"</dt>
-<dd>Prueba integridad bit-a-bit respecto al momento del cálculo. NO prueba autoría ni veracidad.</dd>
-<dt>"Modifiqué el acta para corregir una fecha"</dt>
-<dd>Modificar = nuevo hash = cadena rota. Use un documento de "fe de erratas" con su propio hash.</dd>
-</dl>
+<h3>Lo que debes lograr</h3>
+<p>Al terminar estos tres pasos, debes tener en tu cabeza tres valores:</p>
+<ul>
+<li>El <strong>SHA-256</strong> calculado (64 hex caracteres).</li>
+<li>La <strong>respuesta de <code>-c</code></strong>: OK (la huella coincide con la del archivo .sha256) o FAILED.</li>
+<li>El <strong>tipo de archivo</strong> según <code>file</code>.</li>
+</ul>
+<p>Los tres van al mini-informe.</p>
 
-<h3>Entrega</h3>
-<p class="boton-entrega-wrap">
-<a class="boton-entrega" href="https://github.com/Fabig76/Informatica-forense/issues/new?template=caso1.yml&labels=entrega,caso-1">Entregar Caso 1 →</a>
-</p>
-<p><small>Use el laboratorio localmente en <code>http://localhost:8080/</code>, haga los pasos
-y entregue aquí. Su entrega queda registrada con su nombre y fecha.</small></p>
+<h3>Después: entrega</h3>
+<p>Hacé clic en el botón <strong>"Entregar Caso 1 →"</strong> debajo. Se abre un GitHub Issue con un formulario que te pide tu nombre, correo institucional y los tres valores que acabás de calcular. Pegá también el contenido del mini-informe en <code>~/trabajo/caso1.txt</code> que tiene cinco líneas. Al enviar, queda Issue público con tu nombre y fecha.</p>
+
+<p>Lo que viene después: Caso 2 (Adquisición), donde el acta es una copia forense de una imagen de disco completa.</p>
 </section>
 
 <!-- ════════════════════════════════════════════════ CASO 2 -->
 <section class="caso" id="caso2">
 <h2>Caso 2 · Adquisición y cadena de custodia</h2>
-<p class="subtitulo">Copia forense verificada con hash · Lo que distingue a un perito serio.</p>
-<p class="frase"><em>En una frase.</em> Genere una copia forense verificada por hash de la imagen FAT32 y verifique el directorio de evidencia con hashdeep.</p>
+<p class="subtitulo">Lo que distingue a un perito serio: copiar un disco con verificación de hash durante la copia, no después.</p>
 
-<h3>Qué va a hacer</h3>
-<p>Cinco pasos. La imagen FAT32 está en <code>/evidencia/caso2/caso2-fat32.img</code>.</p>
-<h4>Paso 1 · Identifique la imagen</h4>
-<pre><code>file /evidencia/caso2/caso2-fat32.img</code></pre>
-<h4>Paso 2 · Calcule SHA-256 de la imagen</h4>
-<pre><code>sha256sum /evidencia/caso2/caso2-fat32.img</code></pre>
-<h4>Paso 3 · Hash recursivo del directorio</h4>
-<pre><code>hashdeep -r /evidencia/caso2/evidencia_original/ &gt; ~/trabajo/caso2-hashes.txt
-hashdeep -r -k ~/trabajo/caso2-hashes.txt /evidencia/caso2/evidencia_original/</code></pre>
-<h4>Paso 4 · Copia forense con dc3dd</h4>
-<pre><code>dc3dd if=/evidencia/caso2/caso2-fat32.img \
-      of=~/trabajo/caso2-copia.dd \
-      hash=sha256 hashlog=~/trabajo/caso2-copia.hashes \
-      log=~/trabajo/caso2-copia.log bs=4M</code></pre>
-<h4>Paso 5 · Verifique la copia</h4>
-<pre><code>diff &lt;(sha256sum ~/trabajo/caso2-copia.dd | awk '{print $1}') \
-     &lt;(grep -oE "[0-9a-f]{64}" ~/trabajo/caso2-copia.hashes)</code></pre>
+<h3>Objetivo</h3>
+<p>Generar una copia forense verificada con hash de la imagen FAT32 del caso, y verificar la integridad del directorio de archivos de evidencia que el caso trae adjunto.</p>
 
-<h3>Errores que se cometen</h3>
-<dl>
-<dt>"Solo copié con cp"</dt>
-<dd><code>cp</code> modifica timestamps. Use <code>dc3dd</code> que calcula hash durante la copia.</dd>
-<dt>"Calculé el hash antes y después, son iguales"</dt>
-<dd>Eso prueba que no cambió DESPUÉS, no que la copia sea idéntica al ORIGINAL.</dd>
-<dt>"dd me sirve igual"</dt>
-<dd>Funciona pero NO calcula hash ni deja bitácora. <code>dc3dd</code> sí.</dd>
-</dl>
+<h3>Lo que vas a hacer</h3>
+<p>Cinco pasos. La imagen FAT32 está en <code>/evidencia/caso2/caso2-fat32.img</code> y el directorio de archivos sueltos en <code>/evidencia/caso2/evidencia_original/</code>.</p>
+<ol>
+<li><strong>Identificar</strong> la imagen con <code>file</code>. Debe reportar <code>DOS/MBR boot sector</code> y <code>FAT (32 bit)</code>.</li>
+<li><strong>Calcular el SHA-256</strong> de la imagen. Este es tu número de referencia para todo el caso.</li>
+<li><strong>Hash recursivo del directorio</strong> con <code>hashdeep -r</code>. Genera una lista de hashes y luego verifica con <code>hashdeep -r -k</code>. Salida esperada: una línea <code>OK</code> por archivo.</li>
+<li><strong>Copia forense con <code>dc3dd</code></strong>, que calcula el hash DURANTE la copia. La copia queda en <code>~/trabajo/caso2-copia.dd</code> y dos bitácoras (<code>.hashes</code> y <code>.log</code>).</li>
+<li><strong>Verificar la copia</strong> comparando el hash calculado por <code>dc3dd</code> con el del Paso 2. Si difieren, rehacelo.</li>
+</ol>
 
-<h3>Entrega</h3>
-<p class="boton-entrega-wrap">
-<a class="boton-entrega" href="https://github.com/Fabig76/Informatica-forense/issues/new?template=caso2.yml&labels=entrega,caso-2">Entregar Caso 2 →</a>
-</p>
+<h3>Lo que debes lograr</h3>
+<p>Después de los cinco pasos debes tener:</p>
+<ul>
+<li>El <strong>SHA-256 original</strong> de la imagen.</li>
+<li>Confirmación de que <strong>todos los archivos del directorio</strong> coincidieron con hashdeep (sin alertas).</li>
+<li>Una <strong>copia local</strong> bit-a-bit idéntica a la imagen, con su hash coincidente.</li>
+<li>El <strong>listado de archivos en la imagen FAT32</strong> (mínimo 8 entradas). Aquí descubrirás también el directorio oculto <code>papelera/</code> con archivos "borrados".</li>
+</ul>
+
+<h3>Después: entrega</h3>
+<p>En <strong>"Entregar Caso 2 →"</strong> en esta página, enviá tu mini-informe (<code>~/trabajo/caso2.txt</code>) con los resultados de los cinco pasos. Adjuntá también <code>caso2-papelera.md</code> con la lista de los 3 archivos encontrados dentro de la papelera simulada.</p>
+
+<p>Lo que viene después: Caso 3 (Análisis de NTFS), donde el archivo es una imagen NTFS completa con MFT y flujos alternos.</p>
 </section>
 
 <!-- ════════════════════════════════════════════════ CASO 3 -->
 <section class="caso" id="caso3">
 <h2>Caso 3 · Análisis de sistemas de archivos y SO</h2>
-<p class="subtitulo">MFT, flujos alternos y recuperación · El pan de cada día del perito de Windows.</p>
-<p class="frase"><em>En una frase.</em> Examine el volumen NTFS con Sleuth Kit y detecte archivos borrados y flujos alternos (ADS).</p>
+<p class="subtitulo">El pan de cada día del perito de Windows: examinar la MFT, leer metadatos por inodo, descubrir flujos alternos.</p>
 
-<h3>Qué va a hacer</h3>
-<p>Cuatro pasos. Imagen NTFS: <code>/evidencia/caso3/caso3-ntfs.img</code>.</p>
-<h4>Paso 1 · Identifique el filesystem</h4>
-<pre><code>file /evidencia/caso3/caso3-ntfs.img</code></pre>
-<h4>Paso 2 · Liste el directorio raíz</h4>
-<pre><code>fls /evidencia/caso3/caso3-ntfs.img</code></pre>
-<h4>Paso 3 · Inspeccione metadatos de un inodo</h4>
-<pre><code>istat /evidencia/caso3/caso3-ntfs.img &lt;INODO&gt;</code></pre>
-<h4>Paso 4 · Archivos borrados</h4>
-<pre><code>fls -d /evidencia/caso3/caso3-ntfs.img</code></pre>
+<h3>Objetivo</h3>
+<p>Examinar un volumen NTFS con Sleuth Kit para listar los archivos del directorio raíz, inspeccionar los metadatos de la MFT y demostrar que se pueden identificar archivos borrados sin montar la imagen.</p>
 
-<h3>Errores que se cometen</h3>
-<dl>
-<dt>"Copié y monté la imagen"</dt>
-<dd>Montar modifica timestamps. Use Sleuth Kit sin montar.</dd>
-<dt>"fls no muestra ADS"</dt>
-<dd>Use <code>istat</code> por inode; los ADS viven en atributos <code>$DATA</code> adicionales.</dd>
-<dt>"El archivo borrado es irrecuperable"</dt>
-<dd>Mientras el espacio no se sobrescriba, está. Use <code>icat imagen &lt;INODO&gt; &gt; recuperado.bin</code>.</dd>
-<dt>"Confundí MFT con MBR"</dt>
-<dd>MFT = base de datos interna de NTFS. MBR = primer sector con tabla de particiones.</dd>
-</dl>
+<h3>Lo que vas a hacer</h3>
+<p>Cuatro pasos. La imagen NTFS está en <code>/evidencia/caso3/caso3-ntfs.img</code>. NO la montes: Sleuth Kit trabaja directamente sobre el archivo.</p>
+<ol>
+<li><strong>Identificar el filesystem</strong> con <code>file</code>. Debe reportar NTFS.</li>
+<li><strong>Listar el directorio raíz</strong> con <code>fls /evidencia/caso3/caso3-ntfs.img</code>. Cada entrada tiene un número de inodo (formato <code>r/r 23: archivo.txt</code>).</li>
+<li><strong>Inspeccionar metadatos</strong> de un inodo con <code>istat &lt;INODO&gt;</code>. Vas a ver tipo, tamaño, permisos, cuatro timestamps (creación, modificación, acceso, modificación de MFT) y, si tiene, flujos alternos (ADS).</li>
+<li><strong>Detectar archivos borrados</strong> con <code>fls -d</code>. Estos archivos ya no existen físicamente, pero su metadata sigue en la MFT hasta que sea sobrescrita. Con <code>icat</code> podés recuperar el contenido.</li>
+</ol>
 
-<h3>Entrega</h3>
-<p class="boton-entrega-wrap">
-<a class="boton-entrega" href="https://github.com/Fabig76/Informatica-forense/issues/new?template=caso3.yml&labels=entrega,caso-3">Entregar Caso 3 →</a>
-</p>
+<h3>Lo que debes lograr</h3>
+<p>Después de los cuatro pasos debes poder responder:</p>
+<ul>
+<li>Cuántos <strong>archivos vivos</strong> hay en el directorio raíz.</li>
+<li>Para un archivo específico: su <strong>tamaño</strong>, <strong>fecha de creación</strong> y si tiene <strong>ADS</strong>.</li>
+<li>Cuántos <strong>archivos borrados</strong> detectaste.</li>
+<li>Si uno de ellos es <strong>recuperable</strong> con <code>icat</code> y por qué sí o no.</li>
+</ul>
+
+<h3>Después: entrega</h3>
+<p>En <strong>"Entregar Caso 3 →"</strong>, enviá tu mini-informe (<code>~/trabajo/caso3.txt</code>) con los seis campos que te pide. Si encontraste ADS, adjuntá <code>caso3-flujos.md</code> con el detalle.</p>
+
+<p>Lo que viene después: Caso 4 (Red y memoria), donde el sistema ahora analiza tráfico de red y memoria RAM.</p>
 </section>
 
 <!-- ════════════════════════════════════════════════ CASO 4 -->
 <section class="caso" id="caso4">
 <h2>Caso 4 · Forense de redes y memoria</h2>
-<p class="subtitulo">Tráfico PCAP y captura de memoria del propio proceso · Análisis selectivo.</p>
-<p class="frase"><em>En una frase.</em> Detecte dominios DGA-style y canales de C&amp;C en un PCAP con tshark, y capture y analice la memoria de un proceso con gcore + Volatility 3.</p>
+<p class="subtitulo">Dos tareas en una: leer un PCAP para encontrar malware, y capturar la memoria de un proceso con la herramienta nativa de Linux.</p>
 
-<h3>Parte A · Red (PCAP)</h3>
-<pre><code>tshark -r /evidencia/caso4/red_caso4.pcap -c 5
-tshark -r /evidencia/caso4/red_caso4.pcap -Y "dns" | wc -l
-tshark -r /evidencia/caso4/red_caso4.pcap \
-       -Y "dns.qry.name matches '[0-9a-f]{16,}\.test'" \
-       -T fields -e dns.qry.name | sort | uniq -c | sort -rn | head -10
-tshark -r /evidencia/caso4/red_caso4.pcap -Y "tcp.dstport == 8443" \
-       -T fields -e frame.time_epoch</code></pre>
+<h3>Objetivo</h3>
+<p>Detectar patrones de actividad maliciosa en una captura de tráfico de red (dominios DGA-style, canales de mando y control, túneles DNS) y capturar la memoria de un proceso simulado para analizarla con Volatility 3.</p>
 
-<h3>Parte B · Memoria del proceso</h3>
-<p>En dos terminales dentro del contenedor. Una con:</p>
-<pre><code>incidente</code></pre>
-<p>La otra con:</p>
-<pre><code>capturar-memoria
-vol -f ~/trabajo/memoria_incidente_*.core linux.pslist
-vol -f ~/trabajo/memoria_incidente_*.core linux.netscan
-strings ~/trabajo/memoria_incidente_*.core | grep -i "c2.example.test"</code></pre>
+<h3>Lo que vas a hacer</h3>
+<p><strong>Parte A · Red (PCAP precargado)</strong></p>
+<ol>
+<li>Inspeccionar el PCAP con <code>tshark -r /evidencia/caso4/red_caso4.pcap -c 5</code>.</li>
+<li>Contar consultas DNS y respuestas.</li>
+<li>Encontrar dominios DGA-style (16+ caracteres hexadecimales + <code>.test</code>) con <code>tshark -Y 'dns.qry.name matches "[0-9a-f]{16,}\\.test"'</code>.</li>
+<li>Identificar el canal de C&amp;C: conexiones repetidas a la misma IP en intervalos regulares. Buscá en el puerto 8443.</li>
+<li>Encontrar el túnel DNS: subdominios anormalmente largos (40+ caracteres hexadecimales) bajo <code>tunnel.example.test</code>.</li>
+</ol>
 
-<h3>Errores que se cometen</h3>
-<dl>
-<dt>"La captura tiene MUCHOS paquetes, no los analizo todos"</dt>
-<dd>El análisis es selectivo: use filtros.</dd>
-<dt>"Encontré un dominio DGA, eso es malware"</dt>
-<dd>Es un INDICIO, no prueba. La prueba se construye con conjunción de indicadores.</dd>
-<dt>"memoria.lime es lo mismo que memoria.core"</dt>
-<dd>No. <code>.lime</code> es formato LiME; <code>.core</code> es ELF Core de gcore.</dd>
-</dl>
+<p><strong>Parte B · Memoria del proceso</strong></p>
+<ol>
+<li>Abrir dos terminales dentro del contenedor (usá la pestaña de esta página o <code>docker exec</code>).</li>
+<li>En la primera, ejecutar <code>incidente</code>. El proceso queda corriendo y genera tráfico simulado. NO es malware real: es un proceso pedagógico.</li>
+<li>En la otra, ejecutar <code>capturar-memoria</code>. El script usa <code>gcore</code> para volcar la memoria del proceso y calcula el SHA-256. Al final imprime la ruta del <code>.core</code>.</li>
+<li>Analizar el dump con Volatility 3: <code>vol -f ~/trabajo/memoria_incidente_*.core linux.pslist</code>, <code>linux.pstree</code>, <code>linux.netscan</code>.</li>
+<li>Buscar cadenas sospechosas con <code>strings</code>: <code>strings ~/trabajo/memoria_incendente_*.core | grep -i "c2.example.test\|tunnel"</code>.</li>
+</ol>
 
-<h3>Entrega</h3>
-<p class="boton-entrega-wrap">
-<a class="boton-entrega" href="https://github.com/Fabig76/Informatica-forense/issues/new?template=caso4.yml&labels=entrega,caso-4">Entregar Caso 4 →</a>
-</p>
+<h3>Lo que debes lograr</h3>
+<p>Después de las dos partes debes poder responder:</p>
+<ul>
+<li>Cuántas <strong>consultas DNS totales</strong> hay en la captura y cuántas son DGA-style.</li>
+<li>El <strong>intervalo aproximado entre conexiones al C&amp;C</strong> (segundos).</li>
+<li>Si hay <strong>túnel DNS</strong>, de cuántos paquetes.</li>
+<li>El <strong>nombre del proceso incidente</strong> en <code>vol linux.pslist</code>.</li>
+<li>La <strong>conexión activa</strong> en el dump (IP y puerto en <code>linux.netscan</code>).</li>
+<li>Si la cadena <code>c2.example.test</code> aparece en <code>strings</code>.</li>
+</ul>
+
+<h3>Después: entrega</h3>
+<p>En <strong>"Entregar Caso 4 →"</strong>, enviá tu mini-informe (<code>~/trabajo/caso4.txt</code>) con las diez líneas que te pide el formulario. Las dos líneas más importantes son: <strong>el hash SHA-256 del dump de memoria</strong> y <strong>tu conclusión final</strong> sobre la evidencia de actividad de mando y control.</p>
+
+<p>Lo que viene después: Caso 5 (Dictamen integrador), que es la redacción del dictamen final del caso. Es el único caso sin evidencia técnica nueva: es escritura.</p>
 </section>
 
 <!-- ════════════════════════════════════════════════ CASO 5 -->
 <section class="caso" id="caso5">
 <h2>Caso 5 · Dictamen pericial integrador</h2>
-<p class="subtitulo">Las nueve partes del dictamen y las diez declaraciones · Lo que se evalúa en la sustentación oral.</p>
-<p class="frase"><em>En una frase.</em> Redacte el dictamen pericial formal citando la evidencia recolectada en los casos 1-4.</p>
+<p class="subtitulo">Las nueve partes del dictamen pericial + diez declaraciones bajo juramento. Es la mitad de la nota del curso.</p>
 
-<h3>Estructura (9 partes, art. 226 CGP)</h3>
+<h3>Objetivo</h3>
+<p>Redactar un mini-dictamen pericial formal de 600 a 1200 palabras, con las nueve partes del CGP artículo 226, citando la evidencia recolectada en los casos 1 a 4, y cerrando con las diez declaraciones bajo juramento.</p>
+
+<h3>Lo que vas a hacer</h3>
+<p>No hay práctica técnica. Este caso es escritura. Vas a redactar <code>~/trabajo/caso5-dictamen.md</code> usando un editor de texto (nano, vim o lo que prefieras) o cualquier editor Markdown. Sigue este orden estricto:</p>
 <ol>
-<li><strong>Encabezado e identificación del perito.</strong></li>
-<li><strong>Solicitud.</strong></li>
-<li><strong>Objeto del dictamen.</strong> Tres preguntas concretas.</li>
-<li><strong>Marco normativo.</strong> Ley 906 arts. 415/417/420, CGP art. 226, Ley 1273 art. 269A, ISO/IEC 27037, ACPO, RFC 3227.</li>
-<li><strong>Metodología y verificación de integridad.</strong></li>
-<li><strong>Hallazgos.</strong> Cuatro o cinco con evidencia, procedimiento y resultado numérico.</li>
-<li><strong>Interpretación.</strong> Por qué importa cada hallazgo. Sin adjetivos.</li>
-<li><strong>Conclusiones.</strong> Lista corta (3-6) que responden al Objeto.</li>
-<li><strong>Firma y cierre + 10 declaraciones bajo juramento.</strong></li>
+<li><strong>Encabezado e identificación del perito</strong>: tu nombre, matrícula, fecha, lugar.</li>
+<li><strong>Solicitud</strong>: una frase describiendo lo que se pide.</li>
+<li><strong>Objeto del dictamen</strong>: tres preguntas concretas que el dictamen debe responder (no más de tres).</li>
+<li><strong>Marco normativo</strong>: citas literales de Ley 906 arts. 415/417/420, CGP art. 226, Ley 1273 art. 269A, ISO/IEC 27037, ACPO, RFC 3227.</li>
+<li><strong>Metodología y verificación de integridad</strong>: herramientas usadas, procedimiento del hash, bitácora resumida.</li>
+<li><strong>Hallazgos</strong>: cuatro o cinco con evidencia citada, procedimiento, resultado numérico.</li>
+<li><strong>Interpretación</strong>: une cada hallazgo con su importancia. <strong>Sin adjetivos</strong> como "obviamente", "sospechoso", "malicioso".</li>
+<li><strong>Conclusiones</strong>: lista de tres a seis puntos que responden directamente al Objeto (Punto 3).</li>
+<li><strong>Firma y cierre</strong>: tu firma, matrícula, lugar, y las diez declaraciones bajo juramento.</li>
 </ol>
 
-<h3>Diez declaraciones bajo juramento</h3>
-<blockquote>
-Declaro bajo juramento que: (1) he examinado personalmente la evidencia; (2) el dictamen refleja fielmente mi análisis; (3) no tengo interés directo en el resultado; (4) no he recibido instrucciones sobre las conclusiones; (5) los métodos utilizados son reconocidos por la comunidad científica; (6) los hechos descritos son exactos; (7) no he omitido nada; (8) las opiniones están fundadas; (9) la cadena de custodia está documentada; (10) cumplo los requisitos del artículo 226 del CGP.
-</blockquote>
+<h3>Lo que debes lograr</h3>
+<p>Un mini-dictamen de 600 a 1200 palabras que:</p>
+<ul>
+<li>Incluye <strong>hashes específicos</strong> (no "varios" ni "muchos") en al menos tres hallazgos.</li>
+<li>Menciona <strong>evidencia al menos del caso 1 (acta)</strong> y del <strong>caso 2 (imagen FAT32 + dc3dd)</strong>.</li>
+<li>Cita <strong>marco legal concreto</strong> (Ley 906 art. 415/417/420, CGP art. 226, Ley 1273 art. 269A).</li>
+<li>Incluye las <strong>nueve partes</strong> y las <strong>diez declaraciones</strong>.</li>
+<li><strong>No contiene ninguna de las palabras prohibidas</strong>: obviamente, claramente, evidentemente, sin duda, malicioso, sospechoso, "con la intención de", hacker.</li>
+</ul>
 
-<h3>Errores que se cometen</h3>
-<dl>
-<dt>"Pongo adjetivos que no probé"</dt>
-<dd>Evite <code>obviamente</code>, <code>claramente</code>, <code>evidentemente</code>, <code>sin duda</code>, <code>malicioso</code>, <code>sospechoso</code>, <code>con la intención de</code>, <code>hacker</code>.</dd>
-<dt>"No cito hashes específicos"</dt>
-<dd>Cada hallazgo necesita SHA-256, conteo o fecha. Sin números son afirmaciones.</dd>
-<dt>"Olvido una declaración jurada"</dt>
-<dd>Las DIEZ. Si falta una, no es admisible.</dd>
-</dl>
+<h3>Después: entrega</h3>
+<p>En <strong>"Entregar Caso 5 →"</strong>, pegá el contenido completo de tu <code>caso5-dictamen.md</code> (las nueve partes + diez declaraciones). El docente revisa la redacción, la presencia de hashes concretos, y el cumplimiento del lenguaje sobrio. Este caso es la base para la sustentación oral (Actividad 3), que vale el 25 % de la nota del curso.</p>
 
-<h3>Entrega</h3>
-<p class="boton-entrega-wrap">
-<a class="boton-entrega" href="https://github.com/Fabig76/Informatica-forense/issues/new?template=caso5.yml&labels=entrega,caso-5">Entregar Caso 5 →</a>
-</p>
+<p>Lo que viene después: con la entrega del Caso 5 cerrás el laboratorio forense. La sustentación oral es el siguiente hito, no es parte del laboratorio Docker.</p>
 </section>
 
 </main>
@@ -246,7 +326,7 @@ Declaro bajo juramento que: (1) he examinado personalmente la evidencia; (2) el 
 <p><small>
 Imagen Docker <code>fabiguaza76/inforense:v1</code> en Docker Hub.
 Portal: este sitio (sin servidor, en GitHub Pages).
-Entregas: Issues del repo <a href="https://github.com/Fabig76/Informatica-forense/issues">Fabig76/Informatica-forense</a>.
+Entregas: Issues del repo <a href="https://github.com/Fabig76/Informatica-forense/issues">Fabig76/Informatica-forense</a> con plantilla automática por caso.
 Material pedagógico; datos del caso son ficticios.
 </small></p>
 </footer>
