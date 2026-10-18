@@ -147,6 +147,40 @@ th {
   color: #666;
 }
 
+section.entrega {
+  border: 2px dashed #1864ab;
+  background: #f0f6fb;
+  padding: 16px 20px;
+  margin: 24px 0;
+  border-radius: 4px;
+}
+
+.boton-entrega-wrap {
+  margin: 16px 0 8px 0;
+}
+
+.boton-entrega {
+  display: inline-block;
+  background: #1864ab;
+  color: white;
+  padding: 10px 22px;
+  border-radius: 4px;
+  font-size: 17px;
+  font-weight: bold;
+  text-decoration: none;
+  border: none;
+}
+
+.boton-entrega:hover {
+  background: #0e4778;
+  color: white;
+  border: none;
+}
+
+.boton-entrega:visited {
+  color: white;
+}
+
 dl {
   margin: 12px 0;
 }

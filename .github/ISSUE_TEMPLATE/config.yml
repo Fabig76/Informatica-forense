@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Casos disponibles del laboratorio
+    url: https://fabig76.github.io/Informatica-forense/docker/
+    about: Tabla con el estado actual de los 5 casos del laboratorio forense.
+  - name: Material oficial del programa
+    url: https://fabig76.github.io/Informatica-forense/
+    about: Página principal del programa Informática Forense de UdeCataluña.

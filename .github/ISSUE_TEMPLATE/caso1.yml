@@ -1,0 +1,107 @@
+name: Entrega Caso 1
+description: Plantilla para entregar el Caso 1 del Laboratorio Docker (Hashes e integridad).
+title: "Entrega Caso 1 — "
+labels: ["entrega", "caso-1"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        # Entrega del Caso 1 · Fundamentos
+
+        Complete los campos abajo. Este Issue queda como registro de su entrega
+        en este repositorio y le permite al docente evaluarla.
+
+        Antes de enviar verifique que su archivo `/home/perito/trabajo/caso1.txt`
+        contiene las cinco líneas del mini-informe. Si tiene dudas, relea la
+        sección *Lo que entrega* del enunciado del Caso 1.
+
+  - type: input
+    id: nombre
+    attributes:
+      label: Su nombre completo
+      description: Como aparece en su documento de identidad.
+      placeholder: "Ej: María Pérez García"
+    validations:
+      required: true
+
+  - type: input
+    id: correo
+    attributes:
+      label: Correo institucional (UdeCataluña)
+      placeholder: "nombre.apellido@udecataluña.edu.co"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: verificacion
+    attributes:
+      label: Resultado de `sha256sum -c` (Paso 2 del caso)
+      description: |
+        Compare el SHA-256 que calculó usted con el SHA-256 almacenado en
+        `/evidencia/caso1/acta.sha256`. Marque lo que mostró la pantalla.
+      options:
+        - "OK — la huella coincide con el archivo .sha256"
+        - "FAILED — la huella NO coincide (se explicará en observaciones)"
+    validations:
+      required: true
+
+  - type: input
+    id: sha256
+    attributes:
+      label: SHA-256 calculado por usted (64 caracteres hexadecimales)
+      description: |
+        Pegue exactamente la salida de `sha256sum /evidencia/caso1/acta.txt`,
+        sin espacios intermedios, en minúsculas.
+      placeholder: "9f16b46c23373fdc1edcd5bb93c2841682e82bf0db95585d4b3cb44ead67abbc"
+    validations:
+      required: true
+      pattern: "^[0-9a-fA-F]{64}$"
+
+  - type: input
+    id: tipo
+    attributes:
+      label: Tipo de archivo según `file /evidencia/caso1/acta.txt`
+      placeholder: "Unicode text, UTF-8"
+    validations:
+      required: true
+
+  - type: input
+    id: fecha
+    attributes:
+      label: Fecha y hora en que hizo el cálculo (incluya zona horaria)
+      placeholder: "2026-10-18 14:35 UTC"
+    validations:
+      required: true
+
+  - type: textarea
+    id: informe
+    attributes:
+      label: Su mini-informe (pegue aquí el contenido de `~/trabajo/caso1.txt`)
+      description: Cinco líneas o menos. Incluya la conclusión final.
+      placeholder: |
+        1. SHA-256 calculado: 9f16b46c23373fdc1edcd5bb93c2841682e82bf0db95585d4b3cb44ead67abbc
+        2. sha256sum -c: OK (la huella coincide)
+        3. Tipo de archivo (file): Unicode text, UTF-8
+        4. Fecha del cálculo: 2026-10-18 14:35 UTC
+        5. La integridad del acta está demostrada.
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: confirmaciones
+    attributes:
+      label: "Confirmo lo siguiente:"
+      options:
+        - label: Trabajé sobre la copia en `~/trabajo/`, NO sobre `/evidencia` directamente.
+          required: true
+        - label: Verifiqué la huella del archivo contra el .sha256 ANTES de cerrar el caso.
+          required: true
+        - label: Comprendo que las direcciones, nombres y cifras del caso son ficticias.
+          required: true
+
+  - type: textarea
+    id: observaciones
+    attributes:
+      label: Observaciones (opcional)
+      description: Dudas, tropiezos, o cualquier cosa que quiera anotar.
+      placeholder: "Ej: Tuve que reconectar el SSH dos veces porque perdí la sesión."
