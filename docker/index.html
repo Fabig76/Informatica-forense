@@ -255,17 +255,21 @@ docker run -d --name lab-forense -p 8080:80 --memory=2g fabiguaza76/inforense:v1
 <li>Crea el archivo de entrega en el contenedor:
 <pre><code>mkdir -p ~/trabajo
 cat > ~/trabajo/caso1.txt &lt;&lt;EOT
-1. SHA-256 calculado: $(pega aquí tu hash)
+1. SHA-256 calculado: $(pega aqui tu hash)
 2. sha256sum -c: OK / FAILED
-3. Tipo de archivo (file): pega aquí el tipo
-4. Fecha del cálculo: $(date -u +%Y-%m-%dT%H:%M:%SZ)
-5. La integridad del acta está demostrada.
+3. Tipo de archivo (file): pega aqui el tipo
+4. Fecha del calculo: $(date -u +%Y-%m-%dT%H:%M:%SZ)
+5. La integridad del acta esta demostrada.
 EOT</code></pre>
 </li>
 <li>Hacé clic en el botón <strong>"Entregar Caso 1 →"</strong> debajo. Se abre un GitHub Issue con un formulario que te pide tu nombre, correo institucional y los valores que acabás de calcular.</li>
 <li>Pegá el contenido de <code>~/trabajo/caso1.txt</code>.</li>
 <li>Al enviar, queda Issue público con tu nombre y fecha.</li>
 </ol>
+
+<p class="boton-entrega-wrap">
+<a class="boton-entrega" href="https://github.com/Fabig76/Informatica-forense/issues/new?template=caso1.yml&amp;labels=entrega,caso-1">Entregar Caso 1 →</a>
+</p>
 
 <p>Lo que viene después: Caso 2 (Adquisición), donde el archivo es una imagen de disco completa y el hash protege la copia forense.</p>
 </section>
@@ -396,6 +400,10 @@ EOT</code></pre>
 <li>Hacé clic en <strong>"Entregar Caso 2 →"</strong> y completá el formulario de GitHub Issues.</li>
 </ol>
 
+<p class="boton-entrega-wrap">
+<a class="boton-entrega" href="https://github.com/Fabig76/Informatica-forense/issues/new?template=caso2.yml&amp;labels=entrega,caso-2">Entregar Caso 2 →</a>
+</p>
+
 <p>Lo que viene después: Caso 3 (Análisis NTFS), donde usamos The Sleuth Kit sobre una imagen NTFS con MFT.</p>
 </section>
 
@@ -487,6 +495,10 @@ file ~/trabajo/recuperado.bin</code></pre>
 <li>Si encontraste ADS, <code>~/trabajo/caso3-flujos.md</code> con el detalle de qué flujos alternos había y para qué archivo.</li>
 <li>Clic en <strong>"Entregar Caso 3 →"</strong>.</li>
 </ol>
+
+<p class="boton-entrega-wrap">
+<a class="boton-entrega" href="https://github.com/Fabig76/Informatica-forense/issues/new?template=caso3.yml&amp;labels=entrega,caso-3">Entregar Caso 3 →</a>
+</p>
 
 <p>Lo que viene después: Caso 4 (Red y memoria), donde se combina análisis de tráfico PCAP con captura de memoria de procesos.</p>
 </section>
@@ -617,6 +629,10 @@ vol -f ~/trabajo/memoria_incidente_*.core linux.netscan</code></pre>
 <li>Clic en <strong>"Entregar Caso 4 →"</strong>.</li>
 </ol>
 
+<p class="boton-entrega-wrap">
+<a class="boton-entrega" href="https://github.com/Fabig76/Informatica-forense/issues/new?template=caso4.yml&amp;labels=entrega,caso-4">Entregar Caso 4 →</a>
+</p>
+
 <p>Lo que viene después: Caso 5 (Dictamen). Es el último y NO requiere comandos. Es escritura jurídica.</p>
 </section>
 
@@ -743,6 +759,10 @@ Caso: UdeC-2026-001</code></pre>
 <li>Clic en <strong>"Entregar Caso 5 →"</strong> y pegá el contenido completo.</li>
 <li>El docente evalúa: presencia de las nueve partes, hashes concretos, lenguaje sobrio, citas legales.</li>
 </ol>
+
+<p class="boton-entrega-wrap">
+<a class="boton-entrega" href="https://github.com/Fabig76/Informatica-forense/issues/new?template=caso5.yml&amp;labels=entrega,caso-5">Entregar Caso 5 →</a>
+</p>
 
 <p>Con esto cerrás el laboratorio. La sustentación oral (Actividad 3, 25 % de la nota) usa este dictamen como base.</p>
 </section>
