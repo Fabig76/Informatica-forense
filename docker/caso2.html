@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Caso 2 · Adquisición y cadena de custodia · Informática Forense</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header>
+<p class="miga"><a href="index.html">← Inicio del laboratorio Docker</a> · <a href="../index.html">Programa Informática Forense</a></p>
+<h1>Caso 2 · Adquisición y cadena de custodia</h1>
+<p class="subtitulo">Copia forense verificada con hash · Lo que distingue a un perito serio de uno que no lo es.</p>
+<p class="frase"><em>En una frase.</em> Aprenda a generar una copia forense verificada por hash de una imagen de disco (FAT32) y a verificar la integridad de un directorio de evidencia con hashdeep.</p>
+</header>
+
+<main>
+<section>
+<h2>Qué va a hacer</h2>
+<p>Cinco pasos, en este orden, dentro del contenedor como usuario <code>perito</code>. La imagen forense está precargada en <code>/evidencia/caso2/caso2-fat32.img</code> (128 MB) y los archivos sueltos en <code>/evidencia/caso2/evidencia_original/</code>.</p>
+
+<h3>Paso 1 · Identifique la imagen forense</h3>
+<pre><code>file /evidencia/caso2/caso2-fat32.img</code></pre>
+<p>Verifique que reporta <code>DOS/MBR boot sector</code> y <code>FAT (32 bit)</code>.</p>
+
+<h3>Paso 2 · Calcule el SHA-256 de la imagen</h3>
+<pre><code>sha256sum /evidencia/caso2/caso2-fat32.img</code></pre>
+<p>Anote los 64 caracteres hexadecimales. Es la huella digital bit-a-bit.</p>
+
+<h3>Paso 3 · Calcule el hash de TODO el directorio de evidencia</h3>
+<pre><code>hashdeep -r /evidencia/caso2/evidencia_original/ &gt; ~/trabajo/caso2-hashes.txt
+hashdeep -r -k ~/trabajo/caso2-hashes.txt /evidencia/caso2/evidencia_original/</code></pre>
+<p>El segundo comando verifica que ningún archivo haya sido alterado. Salida esperada: una línea <code>OK</code> por archivo.</p>
+
+<h3>Paso 4 · Haga una copia forense con dc3dd</h3>
+<pre><code>dc3dd if=/evidencia/caso2/caso2-fat32.img \
+      of=~/trabajo/caso2-copia.dd \
+      hash=sha256 \
+      hashlog=~/trabajo/caso2-copia.hashes \
+      log=~/trabajo/caso2-copia.log \
+      bs=4M</code></pre>
+<p><code>dc3dd</code> calcula el hash MIENTRAS copia. La copia debe quedar idéntica bit-a-bit al original.</p>
+
+<h3>Paso 5 · Verifique la copia</h3>
+<pre><code>grep -i "sha256" ~/trabajo/caso2-copia.hashes
+diff &lt;(sha256sum ~/trabajo/caso2-copia.dd | awk '{print $1}') \
+     &lt;(grep -oE "[0-9a-f]{64}" ~/trabajo/caso2-copia.hashes)</code></pre>
+<p>Si no hay diferencia, la copia es íntegra.</p>
+</section>
+
+<section>
+<h2>Lo que entrega</h2>
+<p>En <code>~/trabajo/caso2.txt</code>, cinco líneas:</p>
+<ol>
+<li>SHA-256 calculado en el Paso 2.</li>
+<li>Si la verificación con <code>hashdeep</code> del Paso 3 pasó.</li>
+<li>Si la copia del Paso 4 tiene el mismo hash (Sí/No, y los hashes si difirieron).</li>
+<li>Cantidad de archivos regulares listados por Sleuth Kit: <code>fls -r /evidencia/caso2/caso2-fat32.img | grep -c "^r/r"</code>.</li>
+<li>Conclusión: "La copia forense es íntegra" o detalle de qué falló.</li>
+</ol>
+<p>Y en un archivo aparte, <code>caso2-papelera.md</code>, los 3 archivos que contiene el directorio oculto <code>papelera/</code> dentro de la imagen FAT32. Use <code>fls -r /evidencia/caso2/caso2-fat32.img | grep papelera</code>.</p>
+</section>
+
+<section>
+<h2>Errores que se cometen en este caso</h2>
+<dl>
+<dt>"Solo copié con <code>cp</code>, ya está"</dt>
+<dd><code>cp</code> modifica los timestamps del archivo destino. La copia forense debe preservar los tiempos exactos del original. Por eso se usan <code>dc3dd</code> o <code>dd</code> con <code>conv=noerror,sync</code>.</dd>
+
+<dt>"Calculé el hash antes de copiar y después, son iguales"</dt>
+<dd>Eso prueba que no cambió DESPUÉS, pero no que la copia sea idéntica al ORIGINAL. El hash debe calcularse MIENTRAS se copia.</dd>
+
+<dt>"<code>dd if=... of=...</code> me sirve igual"</dt>
+<dd>Funciona, pero NO calcula el hash durante la copia ni deja bitácora. Si la copia tiene error de lectura, se entera tarde o nunca. <code>dc3dd</code> hace lo mismo + verificación.</dd>
+
+<dt>"Copié solo el directorio y no la imagen"</dt>
+<dd>El hash del directorio y el de la imagen son cosas diferentes. En un caso real, son DOS flujos distintos: copia del disco y copia de los archivos sueltos.</dd>
+
+<dt>"Borré la imagen después de verificar"</dt>
+<dd>Nunca. La copia forense y la original deben coexistir hasta que termine el proceso.</dd>
+</dl>
+</section>
+
+<section>
+<h2>Lo que esto conecta con el dictamen</h2>
+<p>El <strong>Capítulo 2 del dictamen</strong> ("Metodología") lista, paso a paso, cómo se adquirió cada pieza de evidencia. El <strong>Anexo 1</strong> ("Inventario de evidencia") es la tabla con nombres de archivos y hashes: exactamente lo que produce <code>hashdeep -r</code>.</p>
+</section>
+</main>
+
+<footer>
+<p>Universidad de Cataluña · Ingeniería Informática · Informática Forense 2026-II</p>
+</footer>
+</body>
+</html>

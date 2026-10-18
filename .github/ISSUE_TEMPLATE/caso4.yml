@@ -1,0 +1,117 @@
+name: Entrega Caso 4
+description: Plantilla para entregar el Caso 4 del Laboratorio Docker (Red y memoria).
+title: "Entrega Caso 4 — "
+labels: ["entrega", "caso-4"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        # Entrega del Caso 4 · Forense de redes y memoria
+
+  - type: input
+    id: nombre
+    attributes:
+      label: Su nombre completo
+    validations:
+      required: true
+
+  - type: input
+    id: correo
+    attributes:
+      label: Correo institucional
+    validations:
+      required: true
+
+  - type: input
+    id: dns_total
+    attributes:
+      label: Total de paquetes DNS en la captura
+    validations:
+      required: true
+
+  - type: input
+    id: dga_count
+    attributes:
+      label: Cantidad de consultas a dominios DGA-style (Paso 3)
+    validations:
+      required: true
+
+  - type: input
+    id: c2_count
+    attributes:
+      label: Cantidad de conexiones TCP al puerto 8443 (Paso 4)
+    validations:
+      required: true
+
+  - type: input
+    id: c2_intervalo
+    attributes:
+      label: Intervalo aproximado entre conexiones al C&C (segundos)
+      placeholder: "60"
+    validations:
+      required: true
+
+  - type: input
+    id: tunel_count
+    attributes:
+      label: Cantidad de consultas del túnel DNS (Paso 5)
+    validations:
+      required: true
+
+  - type: input
+    id: proceso_nombre
+    attributes:
+      label: Nombre del proceso incidente visto en vol linux.pslist
+    validations:
+      required: true
+
+  - type: input
+    id: net_ip
+    attributes:
+      label: Conexión activa en el dump — IP y puerto (vol linux.netscan)
+      placeholder: "203.0.113.50:8443"
+    validations:
+      required: true
+
+  - type: input
+    id: dump_hash
+    attributes:
+      label: SHA-256 del dump de memoria
+      placeholder: "64 caracteres hexadecimales"
+    validations:
+      required: true
+      pattern: "^[0-9a-fA-F]{64}$"
+
+  - type: dropdown
+    id: strings_match
+    attributes:
+      label: ¿Apareció "c2.example.test" en strings del dump?
+      options:
+        - "Sí"
+        - "No"
+    validations:
+      required: true
+
+  - type: textarea
+    id: informe
+    attributes:
+      label: Pegue el contenido de ~/trabajo/caso4.txt (10 líneas)
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: confirmaciones
+    attributes:
+      label: "Confirmo:"
+      options:
+        - label: Usé gcore (no AVML) para capturar la memoria del proceso del contenedor, sin --privileged.
+          required: true
+        - label: Analicé el dump con Volatility 3 (no solo file ni strings).
+          required: true
+        - label: Distingo los hallazgos INDIVIDUALES de las CONCLUSIONES — un dominio DGA es un indicio, no una prueba.
+          required: true
+
+  - type: textarea
+    id: observaciones
+    attributes:
+      label: Observaciones (opcional)

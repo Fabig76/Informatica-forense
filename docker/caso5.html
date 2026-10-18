@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Caso 5 · Dictamen pericial integrador · Informática Forense</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header>
+<p class="miga"><a href="index.html">← Inicio del laboratorio Docker</a> · <a href="../index.html">Programa Informática Forense</a></p>
+<h1>Caso 5 · Dictamen pericial integrador</h1>
+<p class="subtitulo">Las nueve partes del dictamen, sostenidas con la evidencia · Lo que se evalúa en la sustentación oral.</p>
+<p class="frase"><em>En una frase.</em> Aprenda a redactar un dictamen pericial formal con las nueve partes del sílabo, citando la evidencia recolectada en los casos anteriores y aplicando el lenguaje sobrio del perito (sin adjetivos no demostrables).</p>
+</header>
+
+<main>
+<section>
+<h2>Qué va a hacer</h2>
+<p>Este caso NO genera evidencia nueva. Su único entregable es un <strong>mini-dictamen</strong> que resume el caso guía ficticio de la unidad, citando las piezas de evidencia que recolectó en los casos 1, 2, 3 y 4.</p>
+
+<h3>Estructura del dictamen (nueve partes)</h3>
+<ol>
+<li><strong>Encabezado e identificación del perito.</strong> Su nombre, matrícula, fecha, lugar, y referencia al caso <code>UdeC-2026-001</code>.</li>
+<li><strong>Solicitud.</strong> "Se solicita al perito dictamen pericial sobre la integridad y autenticidad de los archivos de evidencia del expediente".</li>
+<li><strong>Objeto del dictamen.</strong> Tres preguntas concretas que debe responder.</li>
+<li><strong>Marco normativo aplicable.</strong> Ley 906 arts. 415, 417, 420; CGP art. 226; Ley 1273 art. 269A; ISO/IEC 27037; ACPO; RFC 3227.</li>
+<li><strong>Metodología y verificación de integridad.</strong> Herramientas usadas, procedimiento del hash, bitácora resumida.</li>
+<li><strong>Hallazgos.</strong> Cuatro o cinco hallazgos numerados con evidencia citada, procedimiento y resultado numérico.</li>
+<li><strong>Interpretación.</strong> Une cada hallazgo con su importancia y lugar en la línea de tiempo. <strong>NO es el lugar para adjetivos.</strong></li>
+<li><strong>Conclusiones.</strong> Lista corta (3-6 puntos) que responden directamente al Objeto (Punto 3), cada una con su soporte material.</li>
+<li><strong>Firma y cierre.</strong> Firma, matrícula, lugar, y la frase sobre el juramento del art. 226 CGP.</li>
+</ol>
+
+<h3>Las diez declaraciones bajo juramento (art. 226 CGP)</h3>
+<p>Al cerrar, incluya en una sola línea:</p>
+<blockquote>
+Declaro bajo juramento que: (1) he examinado personalmente la evidencia; (2) el dictamen refleja fielmente mi análisis; (3) no tengo interés directo en el resultado; (4) no he recibido instrucciones sobre las conclusiones; (5) los métodos utilizados son reconocidos por la comunidad científica; (6) los hechos descritos son exactos; (7) no he omitido nada; (8) las opiniones están fundadas; (9) la cadena de custodia está documentada; (10) cumplo los requisitos del artículo 226 del CGP.
+</blockquote>
+</section>
+
+<section>
+<h2>Lo que entrega</h2>
+<p>Un archivo <code>~/trabajo/caso5-dictamen.md</code> con las nueve partes y las diez declaraciones. Extensión: <strong>entre 600 y 1200 palabras</strong>. Cada vez que cite una pieza de evidencia, use el nombre del archivo tal como lo recibió en el caso correspondiente.</p>
+<p>Opcional: redactarlo como un correo al fiscal del caso, manteniendo la estructura de las nueve partes dentro del cuerpo.</p>
+</section>
+
+<section>
+<h2>Errores que se cometen en este caso</h2>
+<dl>
+<dt>"Pongo adjetivos que no probé"</dt>
+<dd>La herramienta <code>dictamen revisar</code> (en próximas fases) marca como defectos: <code>obviamente, claramente, evidentemente, sin duda, malicioso, sospechoso, con la intención de, hacker</code>. Sustituya por descripciones o eliminelos.</dd>
+
+<dt>"No cito hashes específicos"</dt>
+<dd>Cada hallazgo debe tener SHA-256, conteo o fecha. Sin números, son afirmaciones.</dd>
+
+<dt>"Cito los artículos de ley en el lugar equivocado"</dt>
+<dd>El marco normativo cita las leyes generales; las conclusiones las aplican al caso.</dd>
+
+<dt>"Confundo hallazgo con interpretación"</dt>
+<dd>Hallazgo = hecho observable. Interpretación = por qué importa.</dd>
+
+<dt>"Olvido una declaración jurada"</dt>
+<dd>Las DIEZ deben estar, en cualquier orden, al final. Si falta una, el dictamen no es admisible.</dd>
+</dl>
+</section>
+
+<section>
+<h2>Lo que esto conecta con la sustentación oral (Actividad 3)</h2>
+<p>La sustentación oral del dictamen se evalúa en la audiencia y vale <strong>el 25 %</strong> de la nota del curso. La preparación se hace sobre las nueve partes: cada pregunta del interrogatorio apunta a un hallazgo o una conclusión del dictamen. Si este caso queda débil, la sustentación se cae, y con ella un cuarto de la nota final.</p>
+</section>
+
+<section>
+<h2>Aclaración sobre el material del curso</h2>
+<p>El sílabo afirma que las nueve partes del dictamen son las nueve del CGP art. 226. <strong>Pero no existe una norma colombiana que diga "el dictamen tiene nueve partes obligatorias".</strong> Las nueve partes son una convención del sílabo y de la práctica forense, útil para uniformar y enseñable, pero no exigida por ley. Esa aclaración está en el AGENTS.md original del proyecto.</p>
+<p>Esto NO significa que las nueve partes sean opcionales. Significa que son una <strong>buena organización pedagógica</strong>, no una obligación legal. El error común del alumno es creer que porque la ley no las exige, puede saltarlas.</p>
+</section>
+</main>
+
+<footer>
+<p>Universidad de Cataluña · Ingeniería Informática · Informática Forense 2026-II</p>
+</footer>
+</body>
+</html>

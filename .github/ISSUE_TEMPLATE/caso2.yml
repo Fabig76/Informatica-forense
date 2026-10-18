@@ -1,0 +1,94 @@
+name: Entrega Caso 2
+description: Plantilla para entregar el Caso 2 del Laboratorio Docker (Adquisición y cadena de custodia).
+title: "Entrega Caso 2 — "
+labels: ["entrega", "caso-2"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        # Entrega del Caso 2 · Adquisición y cadena de custodia
+
+        Complete los campos abajo. Si tiene dudas, relea la sección "Errores que se cometen en este caso" del enunciado del Caso 2.
+
+  - type: input
+    id: nombre
+    attributes:
+      label: Su nombre completo
+    validations:
+      required: true
+
+  - type: input
+    id: correo
+    attributes:
+      label: Correo institucional
+    validations:
+      required: true
+
+  - type: input
+    id: sha256_imagen
+    attributes:
+      label: SHA-256 de la imagen forense (Paso 2 — 64 hex)
+      placeholder: "9f16b46c23373fdc1edcd5bb93c2841682e82bf0db95585d4b3cb44ead67abbc"
+    validations:
+      required: true
+      pattern: "^[0-9a-fA-F]{64}$"
+
+  - type: dropdown
+    id: hashdeep
+    attributes:
+      label: Verificación con hashdeep -r (Paso 3)
+      options:
+        - "OK — todos los archivos coinciden"
+        - "FAILED — algún archivo no coincide"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: copia
+    attributes:
+      label: Comparación de hashes (Paso 5)
+      options:
+        - "Idénticos — la copia es íntegra"
+        - "Diferentes — la copia falló"
+    validations:
+      required: true
+
+  - type: input
+    id: archivos_fat32
+    attributes:
+      label: Cantidad de archivos regulares en la imagen FAT32 (Paso de verificación)
+      placeholder: "Ej: 8 (incluye volumen)"
+    validations:
+      required: true
+
+  - type: textarea
+    id: papelera
+    attributes:
+      label: Adjunte caso2-papelera.md con los 3 archivos de la papelera, o escríbalos aquí
+      placeholder: "1. ...\n2. ...\n3. ..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: informe
+    attributes:
+      label: Pegue el contenido de ~/trabajo/caso2.txt (5 líneas)
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: confirmaciones
+    attributes:
+      label: "Confirmo lo siguiente:"
+      options:
+        - label: Usé dc3dd (no solo dd) y la copia está hasheada durante la copia.
+          required: true
+        - label: La imagen original NO fue modificada (verifiqué con sha256sum antes y después).
+          required: true
+        - label: El directorio /evidencia está montado como solo lectura.
+          required: true
+
+  - type: textarea
+    id: observaciones
+    attributes:
+      label: Observaciones (opcional)

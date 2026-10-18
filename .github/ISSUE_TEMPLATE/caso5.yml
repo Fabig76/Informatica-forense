@@ -1,0 +1,115 @@
+name: Entrega Caso 5
+description: Plantilla para entregar el Caso 5 del Laboratorio Docker (Dictamen integrador).
+title: "Entrega Caso 5 — "
+labels: ["entrega", "caso-5"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        # Entrega del Caso 5 · Dictamen pericial integrador
+
+        El dictamen se entrega como un único archivo `caso5-dictamen.md` con las nueve partes del CGP art. 226, citando la evidencia recolectada en los casos 1 a 4, y cerrando con las diez declaraciones bajo juramento.
+
+  - type: input
+    id: nombre
+    attributes:
+      label: Su nombre completo (como aparece en el encabezado del dictamen)
+    validations:
+      required: true
+
+  - type: input
+    id: correo
+    attributes:
+      label: Correo institucional
+    validations:
+      required: true
+
+  - type: input
+    id: matricula
+    attributes:
+      label: Su matrícula (si aplica)
+    validations:
+      required: true
+
+  - type: input
+    id: palabras
+    attributes:
+      label: Cantidad de palabras del dictamen (entre 600 y 1200)
+      placeholder: "Ej: 870"
+    validations:
+      required: true
+      pattern: "^[0-9]+$"
+
+  - type: checkboxes
+    id: contenido
+    attributes:
+      label: "El dictamen incluye:"
+      options:
+        - label: Las 9 partes (encabezado, solicitud, objeto, marco normativo, metodología, hallazgos, interpretación, conclusiones, firma)
+          required: true
+        - label: Las 10 declaraciones bajo juramento al final
+          required: true
+        - label: Hashes específicos en al menos 3 hallazgos (sha256 reales, no "muchos" ni "varios")
+          required: true
+        - label: Citas de marcos legales concretos (Ley 906 art. 415/417/420, CGP art. 226, Ley 1273 art. 269A)
+          required: true
+        - label: Menciona evidencia al menos del caso 1 (acta) y del caso 2 (imagen FAT32 y dc3dd)
+          required: true
+
+  - type: checkboxes
+    id: lenguaje
+    attributes:
+      label: "El dictamen NO contiene ninguna de estas palabras (los defectos del lenguaje pericial):"
+      options:
+        - label: "obviamente"
+          required: false
+        - label: "claramente"
+          required: false
+        - label: "evidentemente"
+          required: false
+        - label: "sin duda"
+          required: false
+        - label: "malicioso"
+          required: false
+        - label: "sospechoso"
+          required: false
+        - label: "con la intención de"
+          required: false
+        - label: "hacker"
+          required: false
+
+  - type: dropdown
+    id: extension
+    attributes:
+      label: Extensión del dictamen (en palabras)
+      options:
+        - "Menos de 600 (insuficiente)"
+        - "Entre 600 y 1200 (apropiado)"
+        - "Más de 1200 (excesivo, suele perder foco)"
+    validations:
+      required: true
+
+  - type: textarea
+    id: dictamen
+    attributes:
+      label: Pegue el contenido completo de caso5-dictamen.md (las 9 partes + 10 declaraciones)
+      placeholder: |
+        DICTAMEN PERICIAL
+        ==================
+
+        1. ENCABEZADO E IDENTIFICACIÓN DEL PERITO
+        ...
+
+        9. FIRMA Y CIERRE
+        ...
+
+        DECLARACIONES BAJO JURAMENTO
+        =============================
+        Declaro bajo juramento que...
+    validations:
+      required: true
+
+  - type: textarea
+    id: observaciones
+    attributes:
+      label: Observaciones (opcional)

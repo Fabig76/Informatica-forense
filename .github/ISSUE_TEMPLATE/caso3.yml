@@ -1,0 +1,116 @@
+name: Entrega Caso 3
+description: Plantilla para entregar el Caso 3 del Laboratorio Docker (Análisis NTFS).
+title: "Entrega Caso 3 — "
+labels: ["entrega", "caso-3"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        # Entrega del Caso 3 · Análisis de sistemas de archivos y SO
+
+  - type: input
+    id: nombre
+    attributes:
+      label: Su nombre completo
+    validations:
+      required: true
+
+  - type: input
+    id: correo
+    attributes:
+      label: Correo institucional
+    validations:
+      required: true
+
+  - type: input
+    id: tipo_fs
+    attributes:
+      label: Tipo de filesystem (Paso 1, salida de file)
+      placeholder: "DOS/MBR ... NTFS ..."
+    validations:
+      required: true
+
+  - type: input
+    id: archivos_raiz
+    attributes:
+      label: Total de archivos en directorio raíz (Paso 2)
+      placeholder: "Ej: 0 (imagen vacía)"
+    validations:
+      required: true
+
+  - type: input
+    id: inodo_elegido
+    attributes:
+      label: "Para el archivo elegido en Paso 3 — número de inodo"
+    validations:
+      required: true
+
+  - type: input
+    id: tamano_bytes
+    attributes:
+      label: Tamaño en bytes del archivo elegido
+      placeholder: "Ej: 1234"
+    validations:
+      required: true
+
+  - type: input
+    id: timestamp_creacion
+    attributes:
+      label: Fecha de creación según MFT (Paso 3)
+      placeholder: "YYYY-MM-DD HH:MM:SS UTC"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: ads
+    attributes:
+      label: ¿Tiene flujos alternos (ADS)?
+      options:
+        - "Sí, tiene ADS"
+        - "No tiene ADS"
+        - "No pude determinarlo"
+    validations:
+      required: true
+
+  - type: input
+    id: archivos_borrados
+    attributes:
+      label: Cantidad de archivos borrados detectados (Paso 4)
+    validations:
+      required: true
+
+  - type: textarea
+    id: recuperable
+    attributes:
+      label: "Para un archivo borrado — ¿se puede recuperar con icat? Sí/No y por qué"
+    validations:
+      required: true
+
+  - type: textarea
+    id: flujos
+    attributes:
+      label: Adjunte caso3-flujos.md con detalles de ADS, o escríbalos aquí
+
+  - type: textarea
+    id: informe
+    attributes:
+      label: Pegue el contenido de ~/trabajo/caso3.txt (6 líneas)
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: confirmaciones
+    attributes:
+      label: "Confirmo:"
+      options:
+        - label: NO monté la imagen NTFS; usé Sleuth Kit (fls, istat, icat) sobre el archivo.
+          required: true
+        - label: Distingo MFT (metadata interna del FS) de MBR (primer sector del disco).
+          required: true
+        - label: Comprendo que los ADS son específicos de NTFS, no existen en ext4.
+          required: true
+
+  - type: textarea
+    id: observaciones
+    attributes:
+      label: Observaciones (opcional)
