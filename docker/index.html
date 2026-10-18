@@ -7,90 +7,269 @@
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<header>
+<header class="cabecera">
+<p class="miga"><a href="../index.html">← Programa Informática Forense</a></p>
 <h1>Laboratorio de Informática Forense</h1>
 <p class="subtitulo">Universidad de Cataluña · Ingeniería Informática · Cohorte 2026-II</p>
-<p class="alerta"><strong>Aviso.</strong> Las direcciones IP usadas en los casos son de los rangos RFC 5737 (documentación). Las empresas, personas, correos y dominios son ficticios y utilizan dominios <code>.test</code>. Nada de esto representa casos, personas o empresas reales.</p>
+
+<div class="lab-acceso">
+<p class="lab-titulo"><strong>Cómo correr el laboratorio en tu computador</strong></p>
+<p>Tres comandos. Necesitas Docker instalado localmente (no en la nube).</p>
+<pre><code>docker pull fabiguaza76/inforense:v1
+docker run -d --name lab-forense -p 8080:80 fabiguaza76/inforense:v1
+# Abrí http://localhost:8080/ en tu navegador</code></pre>
+<p><small>Si tienes Apple Silicon (M1/M2/M3/M4), el laboratorio es x86
+y funcionará con la emulación de Docker Desktop, aunque más lento. Para
+mejor experiencia, usa un equipo Intel o AMD con 8 GB RAM y 25 GB libres.</small></p>
+</div>
 </header>
 
+<nav class="pestanas" id="pestanas">
+<button class="pestana activa" data-caso="caso1">Caso 1 · Hashes</button>
+<button class="pestana" data-caso="caso2">Caso 2 · Adquisición</button>
+<button class="pestana" data-caso="caso3">Caso 3 · NTFS</button>
+<button class="pestana" data-caso="caso4">Caso 4 · Red y memoria</button>
+<button class="pestana" data-caso="caso5">Caso 5 · Dictamen</button>
+</nav>
+
 <main>
-<section>
-<h2>¿Qué hace este laboratorio?</h2>
-<p>Cinco casos prácticos, uno por clase, encadenados en una sola historia: la del equipo PC-CONT-07 que ya usan las cinco sesiones sincrónicas. El alumno aprende a usar las herramientas reales del perito (The Sleuth Kit, ExifTool, tshark, Volatility 3, CyberChef) sobre evidencia simulada, en un entorno aislado (red solo-anfitrión) y de solo lectura.</p>
-</section>
 
-<section>
-<h2>Casos disponibles</h2>
-<table>
-<thead>
-<tr><th>Caso</th><th>Tema</th><th>Estado</th><th>Enunciado</th></tr>
-</thead>
-<tbody>
-<tr>
-  <td><strong>Caso 1</strong></td>
-  <td>Fundamentos: hashes, integridad, rótulos, cadena de custodia</td>
-  <td><span class="estado listo">LISTO</span></td>
-  <td><a href="caso1.html">Abrir Caso 1 ›</a></td>
-</tr>
-<tr>
-  <td><strong>Caso 2</strong></td>
-  <td>Adquisición y cadena de custodia: dc3dd, hashdeep, E01, papelera</td>
-  <td><span class="estado listo">LISTO</span></td>
-  <td><a href="caso2.html">Abrir Caso 2 ›</a></td>
-</tr>
-<tr>
-  <td><strong>Caso 3</strong></td>
-  <td>Análisis de disco: MFT, flujos alternos, archivos borrados (NTFS)</td>
-  <td><span class="estado listo">LISTO</span></td>
-  <td><a href="caso3.html">Abrir Caso 3 ›</a></td>
-</tr>
-<tr>
-  <td><strong>Caso 4</strong></td>
-  <td>Red y memoria: tshark sobre PCAP + gcore + Volatility 3</td>
-  <td><span class="estado listo">LISTO</span></td>
-  <td><a href="caso4.html">Abrir Caso 4 ›</a></td>
-</tr>
-<tr>
-  <td><strong>Caso 5</strong></td>
-  <td>Dictamen integrador: 9 partes + 10 declaraciones bajo juramento</td>
-  <td><span class="estado listo">LISTO</span></td>
-  <td><a href="caso5.html">Abrir Caso 5 ›</a></td>
-</tr>
-</tbody>
-</table>
-</section>
+<!-- ════════════════════════════════════════════════ CASO 1 -->
+<section class="caso activa" id="caso1">
+<h2>Caso 1 · Fundamentos</h2>
+<p class="subtitulo">Hashes, integridad y rótulos · Lo que enseña un perito cuando apenas empieza.</p>
+<p class="frase"><em>En una frase.</em> Calcule y verifique el SHA-256 del acta del caso, distinga entre integridad y autenticidad, y llene un rótulo de cadena de custodia.</p>
 
-<section>
-<h2>Cómo empezar</h2>
-<p>Si ya tiene Docker corriendo, entre al contenedor con:</p>
-<pre><code>docker compose exec inforense bash</code></pre>
-<p>Una vez dentro, ejecute:</p>
-<pre><code>casos                # lista los 5 casos
-caso 1               # abre el enunciado del caso 1
-autoprueba           # verifica que todo esté instalado</code></pre>
-<p>El trabajo se guarda en <code>/home/perito/trabajo/</code>, fuera de la zona de evidencia.</p>
-</section>
+<h3>Qué va a hacer</h3>
+<p>Tres pasos. Abra una terminal dentro del contenedor (en la web del laboratorio, hay una terminal interactiva) y ejecute los comandos.</p>
 
-<section>
-<h2>Reglas del laboratorio</h2>
+<h4>Paso 1 · Calcule el SHA-256 del acta</h4>
+<pre><code>sha256sum /evidencia/caso1/acta.txt</code></pre>
+<p>Va a obtener 64 caracteres hexadecimales. Anótelos.</p>
+
+<h4>Paso 2 · Verifique con el archivo .sha256</h4>
+<pre><code>sha256sum -c /evidencia/caso1/acta.sha256</code></pre>
+<p>Si la huella coincide, el sistema responde <code>acta.txt: OK</code>.</p>
+
+<h4>Paso 3 · Identifique el archivo</h4>
+<pre><code>file /evidencia/caso1/acta.txt</code></pre>
+
+<h3>Lo que entrega</h3>
+<p>Un mini-informe (cinco líneas, en <code>~/trabajo/caso1.txt</code>) con:</p>
 <ol>
-<li><strong>La evidencia está en <code>/evidencia</code> y es de solo lectura.</strong> No modifique nada de esa carpeta. Trabaje siempre sobre copias en <code>~/trabajo</code>.</li>
-<li><strong>Las máquinas terminadas no tocan internet.</strong> La imagen Docker trae todo adentro (CyberChef local, bases de datos YARA si las necesita). Una máquina de análisis conectada a la red es una mala práctica, no una comodidad.</li>
-<li><strong>El reloj está en UTC a propósito.</strong> Cuando reporte una hora, incluya la zona horaria.</li>
-<li><strong>Herramientas reales.</strong> Las mismas que se usan en un peritaje. Úselas aquí, en imágenes públicas de práctica, o en equipos propios.</li>
+<li>El SHA-256 calculado en el Paso 1.</li>
+<li>Si coincide con el del Paso 2 (Sí/No).</li>
+<li>El tipo de archivo que reporta <code>file</code>.</li>
+<li>La fecha del cálculo.</li>
+<li>Conclusión: "La integridad del acta está demostrada" o detalle de qué falló.</li>
 </ol>
+
+<h3>Errores que se cometen</h3>
+<dl>
+<dt>"Pego el hash y ya está"</dt>
+<dd>Sin <code>sha256sum -c</code>, solo pegó números. El <code>-c</code> es el procedimiento legal.</dd>
+<dt>"MD5 es lo mismo"</dt>
+<dd>MD5 tiene colisiones prácticas desde 2004. Use SHA-256 como hash principal.</dd>
+<dt>"El hash prueba que no se modificó"</dt>
+<dd>Prueba integridad bit-a-bit respecto al momento del cálculo. NO prueba autoría ni veracidad.</dd>
+<dt>"Modifiqué el acta para corregir una fecha"</dt>
+<dd>Modificar = nuevo hash = cadena rota. Use un documento de "fe de erratas" con su propio hash.</dd>
+</dl>
+
+<h3>Entrega</h3>
+<p class="boton-entrega-wrap">
+<a class="boton-entrega" href="https://github.com/Fabig76/Informatica-forense/issues/new?template=caso1.yml&labels=entrega,caso-1">Entregar Caso 1 →</a>
+</p>
+<p><small>Use el laboratorio localmente en <code>http://localhost:8080/</code>, haga los pasos
+y entregue aquí. Su entrega queda registrada con su nombre y fecha.</small></p>
 </section>
 
-<section>
-<h2>Advertencia legal</h2>
-<p>Analizar el computador o la cuenta de otra persona sin autorización puede constituir acceso abusivo a sistema informático (artículo 269A de la Ley 1273 de 2009). En Colombia, esto aplica igual si el equipo es de un familiar y la intención era «solo probar».</p>
-<p>Todo el trabajo práctico de este curso se hace sobre imágenes forenses sintéticas (fabricadas para el ejercicio) y datasets públicos. Practicar sobre equipos reales ajenos, sin autorización escrita, puede terminar una carrera antes de que empiece.</p>
+<!-- ════════════════════════════════════════════════ CASO 2 -->
+<section class="caso" id="caso2">
+<h2>Caso 2 · Adquisición y cadena de custodia</h2>
+<p class="subtitulo">Copia forense verificada con hash · Lo que distingue a un perito serio.</p>
+<p class="frase"><em>En una frase.</em> Genere una copia forense verificada por hash de la imagen FAT32 y verifique el directorio de evidencia con hashdeep.</p>
+
+<h3>Qué va a hacer</h3>
+<p>Cinco pasos. La imagen FAT32 está en <code>/evidencia/caso2/caso2-fat32.img</code>.</p>
+<h4>Paso 1 · Identifique la imagen</h4>
+<pre><code>file /evidencia/caso2/caso2-fat32.img</code></pre>
+<h4>Paso 2 · Calcule SHA-256 de la imagen</h4>
+<pre><code>sha256sum /evidencia/caso2/caso2-fat32.img</code></pre>
+<h4>Paso 3 · Hash recursivo del directorio</h4>
+<pre><code>hashdeep -r /evidencia/caso2/evidencia_original/ &gt; ~/trabajo/caso2-hashes.txt
+hashdeep -r -k ~/trabajo/caso2-hashes.txt /evidencia/caso2/evidencia_original/</code></pre>
+<h4>Paso 4 · Copia forense con dc3dd</h4>
+<pre><code>dc3dd if=/evidencia/caso2/caso2-fat32.img \
+      of=~/trabajo/caso2-copia.dd \
+      hash=sha256 hashlog=~/trabajo/caso2-copia.hashes \
+      log=~/trabajo/caso2-copia.log bs=4M</code></pre>
+<h4>Paso 5 · Verifique la copia</h4>
+<pre><code>diff &lt;(sha256sum ~/trabajo/caso2-copia.dd | awk '{print $1}') \
+     &lt;(grep -oE "[0-9a-f]{64}" ~/trabajo/caso2-copia.hashes)</code></pre>
+
+<h3>Errores que se cometen</h3>
+<dl>
+<dt>"Solo copié con cp"</dt>
+<dd><code>cp</code> modifica timestamps. Use <code>dc3dd</code> que calcula hash durante la copia.</dd>
+<dt>"Calculé el hash antes y después, son iguales"</dt>
+<dd>Eso prueba que no cambió DESPUÉS, no que la copia sea idéntica al ORIGINAL.</dd>
+<dt>"dd me sirve igual"</dt>
+<dd>Funciona pero NO calcula hash ni deja bitácora. <code>dc3dd</code> sí.</dd>
+</dl>
+
+<h3>Entrega</h3>
+<p class="boton-entrega-wrap">
+<a class="boton-entrega" href="https://github.com/Fabig76/Informatica-forense/issues/new?template=caso2.yml&labels=entrega,caso-2">Entregar Caso 2 →</a>
+</p>
 </section>
+
+<!-- ════════════════════════════════════════════════ CASO 3 -->
+<section class="caso" id="caso3">
+<h2>Caso 3 · Análisis de sistemas de archivos y SO</h2>
+<p class="subtitulo">MFT, flujos alternos y recuperación · El pan de cada día del perito de Windows.</p>
+<p class="frase"><em>En una frase.</em> Examine el volumen NTFS con Sleuth Kit y detecte archivos borrados y flujos alternos (ADS).</p>
+
+<h3>Qué va a hacer</h3>
+<p>Cuatro pasos. Imagen NTFS: <code>/evidencia/caso3/caso3-ntfs.img</code>.</p>
+<h4>Paso 1 · Identifique el filesystem</h4>
+<pre><code>file /evidencia/caso3/caso3-ntfs.img</code></pre>
+<h4>Paso 2 · Liste el directorio raíz</h4>
+<pre><code>fls /evidencia/caso3/caso3-ntfs.img</code></pre>
+<h4>Paso 3 · Inspeccione metadatos de un inodo</h4>
+<pre><code>istat /evidencia/caso3/caso3-ntfs.img &lt;INODO&gt;</code></pre>
+<h4>Paso 4 · Archivos borrados</h4>
+<pre><code>fls -d /evidencia/caso3/caso3-ntfs.img</code></pre>
+
+<h3>Errores que se cometen</h3>
+<dl>
+<dt>"Copié y monté la imagen"</dt>
+<dd>Montar modifica timestamps. Use Sleuth Kit sin montar.</dd>
+<dt>"fls no muestra ADS"</dt>
+<dd>Use <code>istat</code> por inode; los ADS viven en atributos <code>$DATA</code> adicionales.</dd>
+<dt>"El archivo borrado es irrecuperable"</dt>
+<dd>Mientras el espacio no se sobrescriba, está. Use <code>icat imagen &lt;INODO&gt; &gt; recuperado.bin</code>.</dd>
+<dt>"Confundí MFT con MBR"</dt>
+<dd>MFT = base de datos interna de NTFS. MBR = primer sector con tabla de particiones.</dd>
+</dl>
+
+<h3>Entrega</h3>
+<p class="boton-entrega-wrap">
+<a class="boton-entrega" href="https://github.com/Fabig76/Informatica-forense/issues/new?template=caso3.yml&labels=entrega,caso-3">Entregar Caso 3 →</a>
+</p>
+</section>
+
+<!-- ════════════════════════════════════════════════ CASO 4 -->
+<section class="caso" id="caso4">
+<h2>Caso 4 · Forense de redes y memoria</h2>
+<p class="subtitulo">Tráfico PCAP y captura de memoria del propio proceso · Análisis selectivo.</p>
+<p class="frase"><em>En una frase.</em> Detecte dominios DGA-style y canales de C&amp;C en un PCAP con tshark, y capture y analice la memoria de un proceso con gcore + Volatility 3.</p>
+
+<h3>Parte A · Red (PCAP)</h3>
+<pre><code>tshark -r /evidencia/caso4/red_caso4.pcap -c 5
+tshark -r /evidencia/caso4/red_caso4.pcap -Y "dns" | wc -l
+tshark -r /evidencia/caso4/red_caso4.pcap \
+       -Y "dns.qry.name matches '[0-9a-f]{16,}\.test'" \
+       -T fields -e dns.qry.name | sort | uniq -c | sort -rn | head -10
+tshark -r /evidencia/caso4/red_caso4.pcap -Y "tcp.dstport == 8443" \
+       -T fields -e frame.time_epoch</code></pre>
+
+<h3>Parte B · Memoria del proceso</h3>
+<p>En dos terminales dentro del contenedor. Una con:</p>
+<pre><code>incidente</code></pre>
+<p>La otra con:</p>
+<pre><code>capturar-memoria
+vol -f ~/trabajo/memoria_incidente_*.core linux.pslist
+vol -f ~/trabajo/memoria_incidente_*.core linux.netscan
+strings ~/trabajo/memoria_incidente_*.core | grep -i "c2.example.test"</code></pre>
+
+<h3>Errores que se cometen</h3>
+<dl>
+<dt>"La captura tiene MUCHOS paquetes, no los analizo todos"</dt>
+<dd>El análisis es selectivo: use filtros.</dd>
+<dt>"Encontré un dominio DGA, eso es malware"</dt>
+<dd>Es un INDICIO, no prueba. La prueba se construye con conjunción de indicadores.</dd>
+<dt>"memoria.lime es lo mismo que memoria.core"</dt>
+<dd>No. <code>.lime</code> es formato LiME; <code>.core</code> es ELF Core de gcore.</dd>
+</dl>
+
+<h3>Entrega</h3>
+<p class="boton-entrega-wrap">
+<a class="boton-entrega" href="https://github.com/Fabig76/Informatica-forense/issues/new?template=caso4.yml&labels=entrega,caso-4">Entregar Caso 4 →</a>
+</p>
+</section>
+
+<!-- ════════════════════════════════════════════════ CASO 5 -->
+<section class="caso" id="caso5">
+<h2>Caso 5 · Dictamen pericial integrador</h2>
+<p class="subtitulo">Las nueve partes del dictamen y las diez declaraciones · Lo que se evalúa en la sustentación oral.</p>
+<p class="frase"><em>En una frase.</em> Redacte el dictamen pericial formal citando la evidencia recolectada en los casos 1-4.</p>
+
+<h3>Estructura (9 partes, art. 226 CGP)</h3>
+<ol>
+<li><strong>Encabezado e identificación del perito.</strong></li>
+<li><strong>Solicitud.</strong></li>
+<li><strong>Objeto del dictamen.</strong> Tres preguntas concretas.</li>
+<li><strong>Marco normativo.</strong> Ley 906 arts. 415/417/420, CGP art. 226, Ley 1273 art. 269A, ISO/IEC 27037, ACPO, RFC 3227.</li>
+<li><strong>Metodología y verificación de integridad.</strong></li>
+<li><strong>Hallazgos.</strong> Cuatro o cinco con evidencia, procedimiento y resultado numérico.</li>
+<li><strong>Interpretación.</strong> Por qué importa cada hallazgo. Sin adjetivos.</li>
+<li><strong>Conclusiones.</strong> Lista corta (3-6) que responden al Objeto.</li>
+<li><strong>Firma y cierre + 10 declaraciones bajo juramento.</strong></li>
+</ol>
+
+<h3>Diez declaraciones bajo juramento</h3>
+<blockquote>
+Declaro bajo juramento que: (1) he examinado personalmente la evidencia; (2) el dictamen refleja fielmente mi análisis; (3) no tengo interés directo en el resultado; (4) no he recibido instrucciones sobre las conclusiones; (5) los métodos utilizados son reconocidos por la comunidad científica; (6) los hechos descritos son exactos; (7) no he omitido nada; (8) las opiniones están fundadas; (9) la cadena de custodia está documentada; (10) cumplo los requisitos del artículo 226 del CGP.
+</blockquote>
+
+<h3>Errores que se cometen</h3>
+<dl>
+<dt>"Pongo adjetivos que no probé"</dt>
+<dd>Evite <code>obviamente</code>, <code>claramente</code>, <code>evidentemente</code>, <code>sin duda</code>, <code>malicioso</code>, <code>sospechoso</code>, <code>con la intención de</code>, <code>hacker</code>.</dd>
+<dt>"No cito hashes específicos"</dt>
+<dd>Cada hallazgo necesita SHA-256, conteo o fecha. Sin números son afirmaciones.</dd>
+<dt>"Olvido una declaración jurada"</dt>
+<dd>Las DIEZ. Si falta una, no es admisible.</dd>
+</dl>
+
+<h3>Entrega</h3>
+<p class="boton-entrega-wrap">
+<a class="boton-entrega" href="https://github.com/Fabig76/Informatica-forense/issues/new?template=caso5.yml&labels=entrega,caso-5">Entregar Caso 5 →</a>
+</p>
+</section>
+
 </main>
 
 <footer>
-<p>Universidad de Cataluña · Ingeniería Informática · Informática Forense 2026-II</p>
-<p><small>Material pedagógico. Datos ficticios. Esta página se sirve desde el contenedor Docker <code>inforense:v1</code>.</small></p>
+<p><strong>Universidad de Cataluña</strong> · Ingeniería Informática · Informática Forense 2026-II</p>
+<p><small>
+Imagen Docker <code>fabiguaza76/inforense:v1</code> en Docker Hub.
+Portal: este sitio (sin servidor, en GitHub Pages).
+Entregas: Issues del repo <a href="https://github.com/Fabig76/Informatica-forense/issues">Fabig76/Informatica-forense</a>.
+Material pedagógico; datos del caso son ficticios.
+</small></p>
 </footer>
+
+<script>
+// Pestañas: navegación simple que muestra/oculta secciones.
+(function() {
+  var pestanas = document.querySelectorAll('.pestana');
+  var secciones = document.querySelectorAll('.caso');
+  pestanas.forEach(function(p) {
+    p.addEventListener('click', function() {
+      var id = p.getAttribute('data-caso');
+      pestanas.forEach(function(x) { x.classList.remove('activa'); });
+      p.classList.add('activa');
+      secciones.forEach(function(s) { s.classList.remove('activa'); });
+      var target = document.getElementById(id);
+      if (target) {
+        target.classList.add('activa');
+        target.scrollIntoView({behavior: 'smooth', block: 'start'});
+      }
+    });
+  });
+})();
+</script>
 </body>
 </html>

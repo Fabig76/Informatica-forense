@@ -1,5 +1,5 @@
 /* Portal del Laboratorio de Informática Forense · inforense:v1
-   Estilo sobrio, accesible, mobile-friendly. */
+   Estilo sobrio, accesible, mobile-friendly, con pestañas y secciones. */
 
 :root {
   --color-fondo: #fbfaf7;
@@ -9,13 +9,13 @@
   --color-aviso: #fff3cd;
   --color-listo: #d4edda;
   --color-proximo: #f1f1ee;
+  --color-pestana-fondo: #eaeae5;
+  --color-pestana-activa: #1864ab;
   --tipografia: Georgia, "Times New Roman", serif;
   --mono: "Courier New", Courier, monospace;
 }
 
-* {
-  box-sizing: border-box;
-}
+* { box-sizing: border-box; }
 
 body {
   font-family: var(--tipografia);
@@ -24,32 +24,39 @@ body {
   color: var(--color-texto);
   background: var(--color-fondo);
   margin: 0 auto;
-  max-width: 880px;
+  max-width: 920px;
   padding: 24px;
 }
 
-header {
+header.cabecera {
   border-bottom: 2px solid var(--color-borde);
   padding-bottom: 16px;
-  margin-bottom: 24px;
+  margin-bottom: 0;
 }
 
 h1 {
-  font-size: 28px;
+  font-size: 30px;
   margin: 0 0 6px 0;
 }
 
 h2 {
-  font-size: 22px;
+  font-size: 24px;
   border-bottom: 1px solid var(--color-borde);
   padding-bottom: 4px;
-  margin-top: 32px;
+  margin-top: 28px;
 }
 
 h3 {
-  font-size: 18px;
+  font-size: 19px;
   margin-top: 20px;
   margin-bottom: 6px;
+  color: #1864ab;
+}
+
+h4 {
+  font-size: 17px;
+  margin-top: 14px;
+  margin-bottom: 4px;
 }
 
 .subtitulo {
@@ -77,6 +84,88 @@ h3 {
   font-size: 14px;
   color: #666;
   margin: 0 0 8px 0;
+}
+
+/* ─── Bloque de acceso al laboratorio (header) ─── */
+
+.lab-acceso {
+  background: #1d3557;
+  color: #f1f1ee;
+  padding: 14px 20px;
+  border-radius: 6px;
+  margin: 16px 0 8px 0;
+}
+
+.lab-acceso p, .lab-acceso pre {
+  margin: 6px 0;
+  color: #f1f1ee;
+}
+
+.lab-acceso .lab-titulo {
+  font-size: 18px;
+  margin-bottom: 8px;
+  color: #fff;
+}
+
+.lab-acceso pre {
+  font-size: 13px;
+}
+
+.lab-acceso pre code {
+  color: #cce5ff;
+}
+
+/* ─── Pestañas ─── */
+
+nav.pestanas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  border-bottom: 1px solid var(--color-borde);
+  margin: 20px 0 0 0;
+  padding-bottom: 0;
+}
+
+.pestana {
+  background: var(--color-pestana-fondo);
+  border: 1px solid var(--color-borde);
+  border-bottom: none;
+  padding: 8px 14px;
+  font-family: inherit;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 4px 4px 0 0;
+  margin-bottom: -1px;
+}
+
+.pestana:hover {
+  background: #d8d6cd;
+}
+
+.pestana.activa {
+  background: #1864ab;
+  color: white;
+  border-color: #1864ab;
+}
+
+/* ─── Secciones de casos ─── */
+
+.caso {
+  display: none;
+  padding: 28px 4px 16px 4px;
+  border-bottom: 1px solid var(--color-borde);
+}
+
+.caso.activa {
+  display: block;
+}
+
+.caso:last-of-type {
+  border-bottom: none;
+}
+
+section {
+  margin: 14px 0;
 }
 
 code {
@@ -107,7 +196,6 @@ a {
   text-decoration: none;
   border-bottom: 1px solid transparent;
 }
-
 a:hover {
   border-bottom-color: var(--color-enlace);
 }
@@ -136,23 +224,13 @@ th {
   border-radius: 3px;
   display: inline-block;
 }
-
 .estado.listo {
   background: var(--color-listo);
   color: #155724;
 }
-
 .estado.proximo {
   background: var(--color-proximo);
   color: #666;
-}
-
-section.entrega {
-  border: 2px dashed #1864ab;
-  background: #f0f6fb;
-  padding: 16px 20px;
-  margin: 24px 0;
-  border-radius: 4px;
 }
 
 .boton-entrega-wrap {
@@ -170,29 +248,18 @@ section.entrega {
   text-decoration: none;
   border: none;
 }
-
 .boton-entrega:hover {
   background: #0e4778;
   color: white;
   border: none;
 }
-
 .boton-entrega:visited {
   color: white;
 }
 
-dl {
-  margin: 12px 0;
-}
-
-dt {
-  font-weight: bold;
-  margin-top: 10px;
-}
-
-dd {
-  margin-left: 24px;
-}
+dl { margin: 12px 0; }
+dt { font-weight: bold; margin-top: 10px; }
+dd { margin-left: 24px; }
 
 footer {
   margin-top: 40px;
@@ -200,4 +267,10 @@ footer {
   border-top: 1px solid var(--color-borde);
   color: #666;
   font-size: 14px;
+}
+
+@media (max-width: 600px) {
+  body { padding: 16px; font-size: 16px; }
+  h1 { font-size: 24px; }
+  .pestana { padding: 6px 10px; font-size: 14px; }
 }
