@@ -1,0 +1,169 @@
+/* Portal del Laboratorio de Informática Forense · inforense:v1
+   Estilo sobrio, accesible, mobile-friendly. */
+
+:root {
+  --color-fondo: #fbfaf7;
+  --color-texto: #1a1a1a;
+  --color-enlace: #1864ab;
+  --color-borde: #d6d3c8;
+  --color-aviso: #fff3cd;
+  --color-listo: #d4edda;
+  --color-proximo: #f1f1ee;
+  --tipografia: Georgia, "Times New Roman", serif;
+  --mono: "Courier New", Courier, monospace;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: var(--tipografia);
+  font-size: 17px;
+  line-height: 1.6;
+  color: var(--color-texto);
+  background: var(--color-fondo);
+  margin: 0 auto;
+  max-width: 880px;
+  padding: 24px;
+}
+
+header {
+  border-bottom: 2px solid var(--color-borde);
+  padding-bottom: 16px;
+  margin-bottom: 24px;
+}
+
+h1 {
+  font-size: 28px;
+  margin: 0 0 6px 0;
+}
+
+h2 {
+  font-size: 22px;
+  border-bottom: 1px solid var(--color-borde);
+  padding-bottom: 4px;
+  margin-top: 32px;
+}
+
+h3 {
+  font-size: 18px;
+  margin-top: 20px;
+  margin-bottom: 6px;
+}
+
+.subtitulo {
+  color: #555;
+  font-size: 17px;
+  margin: 4px 0 12px 0;
+}
+
+.frase {
+  background: #f4f1ea;
+  padding: 10px 14px;
+  border-left: 4px solid #8a7c5a;
+  margin: 16px 0;
+}
+
+.alerta {
+  background: var(--color-aviso);
+  border-left: 4px solid #f0ad4e;
+  padding: 10px 14px;
+  margin: 16px 0;
+  font-size: 14px;
+}
+
+.miga {
+  font-size: 14px;
+  color: #666;
+  margin: 0 0 8px 0;
+}
+
+code {
+  font-family: var(--mono);
+  background: #f0ede5;
+  padding: 1px 4px;
+  font-size: 14px;
+}
+
+pre {
+  background: #1f1f1f;
+  color: #f1f1ee;
+  padding: 12px 14px;
+  overflow-x: auto;
+  font-family: var(--mono);
+  font-size: 14px;
+  border-radius: 3px;
+}
+
+pre code {
+  background: transparent;
+  color: inherit;
+  padding: 0;
+}
+
+a {
+  color: var(--color-enlace);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+}
+
+a:hover {
+  border-bottom-color: var(--color-enlace);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 12px 0;
+}
+
+th, td {
+  border: 1px solid var(--color-borde);
+  padding: 8px 10px;
+  text-align: left;
+}
+
+th {
+  background: #f0ede5;
+  font-weight: bold;
+}
+
+.estado {
+  padding: 2px 8px;
+  font-size: 12px;
+  font-family: var(--mono);
+  border-radius: 3px;
+  display: inline-block;
+}
+
+.estado.listo {
+  background: var(--color-listo);
+  color: #155724;
+}
+
+.estado.proximo {
+  background: var(--color-proximo);
+  color: #666;
+}
+
+dl {
+  margin: 12px 0;
+}
+
+dt {
+  font-weight: bold;
+  margin-top: 10px;
+}
+
+dd {
+  margin-left: 24px;
+}
+
+footer {
+  margin-top: 40px;
+  padding-top: 16px;
+  border-top: 1px solid var(--color-borde);
+  color: #666;
+  font-size: 14px;
+}

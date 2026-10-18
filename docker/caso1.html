@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Caso 1 · Fundamentos · Informática Forense UdeCataluña</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header>
+<p class="miga"><a href="index.html">← Inicio del laboratorio Docker</a> · <a href="../index.html">Programa Informática Forense</a></p>
+<h1>Caso 1 · Fundamentos</h1>
+<p class="subtitulo">Hashes, integridad y rótulos · Lo que enseña un perito cuando apenas empieza.</p>
+<p class="frase"><em>En una frase.</em> Aprenda a calcular y verificar el SHA-256 de un archivo de evidencia, distinguir entre integridad y autenticidad, y llenar un rótulo de cadena de custodia.</p>
+</header>
+
+<main>
+<section>
+<h2>Qué va a hacer</h2>
+<p>Tres pasos, en este orden. Cada uno se ejecuta en la terminal del contenedor Docker, como usuario <code>perito</code>. Todos los comandos son los que se ven en un dictamen real.</p>
+
+<h3>Paso 1 · Calcule el SHA-256 del acta</h3>
+<p>El archivo <code>/evidencia/caso1/acta.txt</code> es el acta de entrega de 14 elementos del caso. Su huella digital no está en el archivo; hay que calcularla.</p>
+<pre><code>sha256sum /evidencia/caso1/acta.txt</code></pre>
+<p>Va a obtener 64 caracteres hexadecimales. Anótelos. Ese es el SHA-256 del acta tal como existe hoy, en este momento.</p>
+
+<h3>Paso 2 · Verifique con el archivo .sha256</h3>
+<p>El expediente incluye el archivo <code>/evidencia/caso1/acta.sha256</code> con la huella calculada cuando se empacó la evidencia.</p>
+<pre><code>sha256sum -c /evidencia/caso1/acta.sha256</code></pre>
+<p>Si la huella coincide, el sistema responde <code>acta.txt: OK</code>. Si alguien modificó un solo bit del acta, responde <code>FAILED</code>.</p>
+
+<h3>Paso 3 · Identifique el archivo</h3>
+<p>Use <code>file</code> para confirmar que el archivo es texto y no otra cosa disfrazada.</p>
+<pre><code>file /evidencia/caso1/acta.txt</code></pre>
+</section>
+
+<section>
+<h2>Lo que entrega</h2>
+<p>Un mini-informe (cinco líneas o menos, en <code>~/trabajo/caso1.txt</code>) con:</p>
+<ol>
+<li>El SHA-256 calculado en el Paso 1.</li>
+<li>Si el SHA-256 del Paso 1 coincide con el del Paso 2 (verificación).</li>
+<li>El tipo de archivo que reporta <code>file</code>.</li>
+<li>La fecha del cálculo (la de su sesión).</li>
+<li>Una línea final: «La integridad del acta está demostrada» o, si falló, qué pasó.</li>
+</ol>
+</section>
+
+<section>
+<h2>Errores que se cometen en este caso</h2>
+<dl>
+<dt>"Pego el hash y ya está"</dt>
+<dd>Sin <code>sha256sum -c</code>, solo pegó números. El <code>-c</code> es el procedimiento legal: re-computa y compara. Si se lo salta, no está probando nada.</dd>
+
+<dt>"Calculé MD5, eso es lo mismo"</dt>
+<dd>MD5 produce solo 128 bits y tiene colisiones prácticas desde 2004. La guía dice explícitamente: MD5 se acepta solo como complemento. En un dictamen serio, el hash principal es SHA-256 o superior.</dd>
+
+<dt>"El hash prueba que el archivo no se modificó"</dt>
+<dd>Lo que prueba es que el archivo que tengo HOY es idéntico bit a bit al que se calculó en el momento original. No prueba autoría (quién lo creó) ni veracidad (si el contenido es cierto). Es lo que distingue a un perito serio de uno que confunde términos.</dd>
+
+<dt>"El archivo dice .txt, no hace falta verificar"</dt>
+<dd>La extensión es solo una etiqueta del sistema operativo. Lo que importa es el contenido bit a bit, y eso solo lo dice el hash.</dd>
+
+<dt>"Modifiqué el acta para corregir una fecha"</dt>
+<dd>Si modifica el archivo, su hash cambia y la cadena de custodia cae. La fecha va en el archivo y NO se corrige a mano: se emite un nuevo documento de "fe de erratas" con su propio hash.</dd>
+</dl>
+</section>
+
+<section>
+<h2>Lo que esto conecta con el dictamen</h2>
+<p>El <strong>Capítulo 2 del dictamen</strong> ("Metodología y verificación de integridad") empieza citando el SHA-256 del archivo analizado. Si no calculó y verificó correctamente el hash del acta, ese capítulo queda vacío o contiene datos no verificados, y toda la credibilidad del dictamen se resiente.</p>
+<p>El <strong>Capítulo 3</strong> ("Hallazgos") empieza con la cadena de custodia. El formato FPJ-8 del expediente pide los hashes de cada imagen forense. La práctica de "calcular, comparar, verificar" es la misma: lo que hace aquí se repite para la imagen del disco en el Caso 2 y para la memoria del Caso 4.</p>
+</section>
+
+<section>
+<h2>Aclaración sobre el material del curso</h2>
+<p><strong>No hay palabras de las que la defensa aprovecha.</strong> Evite escribir, en cualquier entrega o dictamen:</p>
+<p><code>obviamente</code>, <code>claramente</code>, <code>evidentemente</code>, <code>sin duda</code>, <code>malicioso</code>, <code>sospechoso</code>, <code>con la intención de</code>, <code>hacker</code>.</p>
+<p>Esas palabras son marcadas por la herramienta <code>dictamen revisar</code> (a entregar en próximas fases) como defectos del lenguaje pericial. La regla del curso: «si tiene que decirlo, demuéstrelo con la evidencia, no con el adjetivo».</p>
+</section>
+</main>
+
+<footer>
+<p>Universidad de Cataluña · Ingeniería Informática · Informática Forense 2026-II</p>
+<p><small>Imagen Docker <code>inforense:v1</code> · Esta página es material pedagógico. Los datos del acta son ficticios.</small></p>
+</footer>
+</body>
+</html>
