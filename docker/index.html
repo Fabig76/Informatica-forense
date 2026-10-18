@@ -72,37 +72,28 @@
 </ul>
 <p><strong>Síntoma:</strong> mensaje "container name already in use".</p>
 
-<p><strong>Solución, paso a paso:</strong></p>
-<pre><code># 1. Verificar el estado actual
-docker ps -a
-# Muestra TODOS los contenedores, no solo los corriendo.
-# El container "lab-forense" debe aparecer con STATUS "Exited".
+<p><strong>Diagnóstico:</strong> Ver todos los contenedores, no solo los corriendo.</p>
+<pre><code>docker ps -a</code></pre>
+<p>El contenedor <code>lab-forense</code> debe aparecer con STATUS <code>Exited</code> (si lo detuviste) o <code>Up</code> (si está corriendo).</p>
 
-# 2a. Si quieres volver a arrancarlo (conservando los datos ~/trabajo):
-docker start lab-forense
+<p><strong>Caso A — Querés volver a arrancarlo conservando los datos y los puertos</strong>:</p>
+<pre><code>docker start lab-forense
+# NO uses -p aquí: docker start NO acepta -p.
+# Los puertos ya están registrados desde el docker run original.
+# Si la imagen fue creada con -p 8080:80, el puerto se vuelve a publicar solo.</code></pre>
+<p>Verificá que volvió a levantar:</p>
+<pre><code>docker ps
+# Debe decir "Up X seconds" para lab-forense.
+# Si no carga http://localhost:8080/, es porque tu docker run
+# original NO tenía -p 8080:80, y hay que recrearlo (ver Caso B).</code></pre>
 
-# 2b. Si quieres arrancarlo Y que publique el puerto de nuevo:
-docker start -p 8080:80 lab-forense
-# Cuando arrancas uno detenido, los puertos NO se vuelven a publicar
-# automáticamente. Por eso pasamos -p otra vez.
-
-# 3. Verificar que ahora corre
-docker ps
-# Debe mostrar "Up X seconds" para lab-forense.
-
-# 4. Si sigue sin responder en localhost:8080
-docker logs lab-forense --tail 30
-# Te muestra las últimas 30 líneas del log. Si dice "nginx not
-# found" o "permission denied", hay un problema con la imagen.
-</code></pre>
-
-<p><strong>Si quieres borrarlo y empezar fresco:</strong></p>
+<p><strong>Caso B — Querés borrarlo y empezar fresco con puertos correctos</strong>:</p>
 <pre><code>docker rm -f lab-forense
-docker run -d --name lab-forense -p 8080:80 --memory=2g fabiguaza76/inforense:v1
-</code></pre>
-<p><code>docker rm -f</code> borra el contenedor (no la imagen). Después <code>docker run</code> lo recrea desde cero.</p>
+docker run -d --name lab-forense -p 8080:80 --memory=2g fabiguaza76/inforense:v1</code></pre>
+<p><code>docker rm -f</code> borra el contenedor (no la imagen). Después <code>docker run</code> lo recrea desde cero con el puerto bien publicado.</p>
+<p><strong>Por qué <code>docker start -p</code> no funciona:</strong> <code>docker start</code> solo reanuda contenedores detenidos; no acepta modificar la configuración de puertos. La opción <code>-p</code> (publish) es exclusiva de <code>docker run</code>. Si querés cambiar el puerto después de creado, hay que borrarlo y recrearlo.</p>
 
-<h3>Paso 6 · Apaga el laboratorio cuando termines</h3>
+<hr>
 <pre><code>docker stop lab-forense</code></pre>
 <p>El contenedor se apaga pero la imagen (1.2 GB) queda en disco.</p>
 
